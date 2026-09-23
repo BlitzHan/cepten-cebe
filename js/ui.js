@@ -380,7 +380,8 @@
     $('vProfit').className = 'led-sub' + (pr < 0 ? ' neg' : '');
     $('vStock').textContent = f(S.stock);
     $('vDepot').textContent = S.stock < 1 && fl.sell > 0.05 ? 'Gelen anında satılıyor'
-      : S.stock >= G.depotCap() - 0.5 ? 'Depo dolu (' + f(G.depotCap()) + ') · satıldıkça alınıyor'
+      : fl.filling ? 'Depo doluyor · ' + G.fmtTime(fl.fillIn) + ' sonra dolar'
+      : S.stock >= G.depotCap() * 0.5 && fl.buy < G.supTotal() ? 'Depo dolu (' + f(G.depotCap()) + ') · satıldıkça alınıyor'
       : 'Kapasite ' + f(G.depotCap()) + ' · ' + D.DEPOTS[S.depot].name;
     var fill = S.stock / G.depotCap();
     $('barStock').style.transform = 'scaleX(' + Math.min(1, fill).toFixed(4) + ')';

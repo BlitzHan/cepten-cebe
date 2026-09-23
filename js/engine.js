@@ -347,18 +347,27 @@
   };
 
   // Otomasyonun sürekli akışı: tıklamalardan bağımsız, kapasite ve darboğazdan hesaplanır.
+  G.flowState = { full: false, drain: false };
   G.flow = function () {
     var S = G.S, sup = G.supTotal(), ch = G.chanTotal();
-    // Kalıcı akış: uzun vadede ancak satılan kadar alınır (fazlası depoyu doldurur, sonra alış durur).
-    // Stok ve kasaya bakılmaz; elle al/sat bu sayıları oynatamaz. Aradaki fark bantta "kapasite" olarak görünür.
-    var buy = Math.min(sup, ch), sell = buy;
-    // Kâr: ucuz tedarikçi önce çalışır, pahalı kanal önce satar.
+    // Bant otomasyonun gerçek durumunu gösterir: depo doluyorsa tedarikçiler tam hızda alır,
+    // dolunca satış hızına iner. Durum geçişleri gecikmeli (histerezis): dolu sayılmak için depo
+    // neredeyse dolmalı (%98 ya da 2 sn'lik satış kadar boşluk), boş sayılmak için yarının altına inmeli. Birkaç elle tık bunu çeviremez.
+    var cap = G.depotCap(), st = G.flowState;
+    if (S.stock >= Math.min(cap * 0.98, cap - ch * 2)) st.full = true; else if (S.stock < cap * 0.5) st.full = false;
+    if (S.stock > Math.max(20, ch * 10)) st.drain = true; else if (S.stock < 1) st.drain = false;
+    var buy, sell;
+    if (sup > ch) { buy = st.full ? ch : sup; sell = ch; }
+    else { buy = sup; sell = st.drain ? ch : sup; }
+    // Kasadaki kâr/sn kalıcı kazançtır: uzun vadede ancak satılan kadar alınır, min(tedarik, satış).
+    // Stoğa ve kasaya hiç bakmaz. Ucuz tedarikçi önce çalışır, pahalı kanal önce satar.
+    var steady = Math.min(sup, ch);
     var bp = G.buyPrice(), sp = G.sellPrice();
-    var left = buy, cost = 0, rev = 0;
+    var left = steady, cost = 0, rev = 0;
     supOrder.forEach(function (i) { var n = Math.min(left, G.supRate(i)); cost += n * bp * D.SUPPLIERS[i].mult; left -= n; });
-    left = sell;
+    left = steady;
     chanOrder.forEach(function (j) { var n = Math.min(left, G.chanRate(j)); rev += n * sp * D.CHANNELS[j].mult; left -= n; });
-    return { buy: buy, sell: sell, profit: rev - cost };
+    return { buy: buy, sell: sell, profit: rev - cost, filling: sup > ch && !st.full, fillIn: sup > ch ? Math.max(0, cap - S.stock) / (sup - ch) : 0 };
   };
   // Öneri sadece otomasyona bakar (tedarik ve satış hızı). Elle al/sat öneriyi değiştirmez.
   G.advice = function () {
