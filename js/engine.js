@@ -327,23 +327,48 @@
     var u = list(kind)[i];
     return i === 0 || owned(kind)[i] > 0 || G.S.stats.earnedAll >= u.cost * 0.25;
   };
-  G.bestFor = function (kind) {
-    var best = null, isS = kind === 's';
-    function consider(c) { if (!best || c.value > best.value) best = c; }
+  // Önerilecek yatırım: lira başına en verimli olan, ama sadece anlamlı olanlar arasından.
+  // O tarafın hızının (ya da açığın) %3'ünden azını ekleyen seçenek elenir; 20 tel/sn açıkta +0,1 bir şey çözmez.
+  G.bestFor = function (kind, gap) {
+    var isS = kind === 's';
+    var sideTotal = isS ? G.supTotal() : G.chanTotal();
+    var floor = 0.03 * Math.max(sideTotal, gap > 0 ? gap : 0);
+    var all = [];
     list(kind).forEach(function (u, i) {
       if (!G.visibleUnit(kind, i)) return;
       var cost = G.unitCost(kind, i), gain = isS ? G.supRateOne(i) : G.chanRateOne(i);
-      consider({ type: 'unit', kind: kind, i: i, name: u.name, cost: cost, gain: gain, value: gain / cost });
+      all.push({ type: 'unit', kind: kind, i: i, m: 1, name: u.name, cost: cost, gain: gain });
     });
-    var sideTotal = isS ? G.supTotal() : G.chanTotal();
     G.upgradesAvailable().forEach(function (up) {
-      var gain = 0, m = /^([sc])(\d+)_\d+$/.exec(up.id);
-      if (m && m[1] === kind) gain = isS ? G.supRate(+m[2]) : G.chanRate(+m[2]);
+      var gain = 0, mm = /^([sc])(\d+)_\d+$/.exec(up.id);
+      if (mm && mm[1] === kind) gain = isS ? G.supRate(+mm[2]) : G.chanRate(+mm[2]);
       var g = D.GLOBAL_UPS.filter(function (x) { return x.id === up.id; })[0];
       if (g && g.eff[isS ? 'sup' : 'chan']) gain = sideTotal * (g.eff[isS ? 'sup' : 'chan'] - 1);
-      if (gain > 0) consider({ type: 'upg', kind: kind, id: up.id, name: up.name, cost: up.cost, gain: gain, value: gain / up.cost });
+      if (gain > 0) all.push({ type: 'upg', kind: kind, id: up.id, name: up.name, cost: up.cost, gain: gain, m: 1 });
     });
+    var pool = all.filter(function (c) { return c.gain >= floor; });
+    if (!pool.length) pool = all;
+    var best = null;
+    pool.forEach(function (c) { c.value = c.gain / c.cost; if (!best || c.value > best.value) best = c; });
     return best;
+  };
+
+  // Otomasyonun sürekli akışı: tıklamalardan bağımsız, kapasite ve darboğazdan hesaplanır.
+  G.flow = function () {
+    var S = G.S, sup = G.supTotal(), ch = G.chanTotal();
+    var backlog = S.stock > Math.max(20, ch * 10);            // depoda gerçekten birikmiş mal var mı
+    // Eşikler tıklamaya dayanıklı: birkaç tık depoyu boşaltıp kasayı doldursa da akış değişmez.
+    var depotFull = S.stock > G.depotCap() * 0.9 && sup > ch;
+    var cashShort = S.cash < G.buyPrice() * Math.max(1, sup) * 3;
+    var buy = sup;
+    if (depotFull || (cashShort && sup > ch)) buy = Math.min(sup, ch);  // satıldıkça alır
+    var sell = backlog ? ch : Math.min(ch, buy);
+    // kâr: ucuz tedarikçi önce çalışır, pahalı kanal önce satar
+    var bp = G.buyPrice(), sp = G.sellPrice(), left = buy, cost = 0, rev = 0;
+    supOrder.forEach(function (i) { var n = Math.min(left, G.supRate(i)); cost += n * bp * D.SUPPLIERS[i].mult; left -= n; });
+    left = sell;
+    chanOrder.forEach(function (j) { var n = Math.min(left, G.chanRate(j)); rev += n * sp * D.CHANNELS[j].mult; left -= n; });
+    return { buy: buy, sell: sell, profit: rev - cost };
   };
   G.advice = function () {
     var S = G.S, sup = G.supTotal(), ch = G.chanTotal();
@@ -372,9 +397,9 @@
       a.rec = d ? { type: 'depot', name: d.name, cost: d.cost } : null;
       if (!d) { a.side = 'c'; a.head = 'Satış noktası aç'; }
     }
-    if (a.side !== 'depot') a.rec = G.bestFor(a.side);
+    if (a.side !== 'depot') a.rec = G.bestFor(a.side, a.balanced ? 0 : Math.abs(sup - ch));
     if (a.rec && a.rec.cost > S.cash) {
-      var pr = Math.max(0, G.rt.profit);
+      var pr = Math.max(0, G.flow().profit);
       a.eta = pr > 0 ? (a.rec.cost - S.cash) / pr : null;
     }
     var e = G.nextEra();

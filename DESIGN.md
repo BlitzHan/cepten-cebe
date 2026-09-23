@@ -36,9 +36,9 @@ Tek aile: **Archivo** (değişken, `wdth` 62–125).
 - **Çıkartma (`.sticker`):** başarımlar, yuvarlak, hafif eğik.
 - **Fiş (`.receipt`):** olay günlüğü, yırtık alt kenar.
 - **Olay çıkartması:** sarı, hafif eğik, üstten yapışarak gelir.
-- **Şimdi tabelası (`.advice`):** AL/SAT'ın hemen altında. Başlık şeridi darboğaz tarafının renginde (lacivert tedarik, kırmızı satış), yanında sarı "Şimdi" etiketi. Altında tek cümle neden ve tek tıkla alınabilen öneri kartı. Karar `G.advice()` içinde: alış/satış hızı, depo ve kasa karşılaştırılır, o taraftaki lira başına en çok telefon/sn getiren birim ya da yükseltme seçilir.
+- **Şimdi tabelası (`.advice`):** AL/SAT'ın hemen altında. Başlık şeridi darboğaz tarafının renginde (lacivert tedarik, kırmızı satış), yanında sarı "Şimdi" etiketi. Altında tek cümle neden ve tek tıkla alınabilen öneri kartı. Karar `G.advice()` içinde: alış/satış hızı, depo ve kasa karşılaştırılır, o taraftaki lira başına en çok telefon/sn getiren birim ya da yükseltme seçilir; tarafın hızının ya da açığın %3'ünden azını ekleyen seçenekler elenir.
 - **Öneri işaretleri:** önerinin olduğu sekme sarı ve altı oklu; önerilen satırda sarı çerçeve ve "Şimdi en iyi yatırım" etiketi; zayıf şeritte kırmızı "Darboğaz" etiketi. Sarı noktalar yalnızca "burada alınabilecek bir şey var" anlamında kalır.
-- **Tezgâh bandı:** alış (lacivert) ve satış (kırmızı) şeritleri; hızla orantılı akan çizgiler.
+- **Tezgâh bandı:** alış (lacivert) ve satış (kırmızı) şeritleri. Soluk katman kapasite, akan katman otomasyonun sürekli akışı (`G.flow()`); manuel tıklamalar bandı etkilemez.
 
 ## Hareket
 Tek dil: floresan tüp. AL/SAT basınca titreme, bant sürekli akar, olay çıkartması yapışır. Diğer her şey sade; `prefers-reduced-motion` tüm animasyonu kapatır.

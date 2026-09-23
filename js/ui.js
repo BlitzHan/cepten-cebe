@@ -341,7 +341,7 @@
       var gainTxt = r.type === 'depot' ? 'Kapasite ' + f(G.nextDepot().cap) : '+' + fr(r.gain) + ' tel/sn';
       h += '<button class="adv-rec ' + tone + (ok ? ' ok' : '') + '" data-act="rec">' +
         '<span class="adv-ico">' + ico + '</span>' +
-        '<span class="adv-txt"><b>' + r.name + '</b><small>' + gainTxt + ' · ' + tl(r.cost) + '</small></span>' +
+        '<span class="adv-txt"><b>' + r.name + (r.m > 1 ? ' ×' + r.m : '') + '</b><small>' + gainTxt + ' · ' + tl(r.cost) + '</small></span>' +
         '<span class="adv-go">' + (ok ? 'Al' : a.eta ? G.fmtTime(a.eta) + ' sonra' : 'Biriktir') + '</span></button>';
     }
     if (a.extra) h += '<p class="adv-extra">' + a.extra + '</p>';
@@ -375,11 +375,11 @@
   function render() {
     var S = G.S;
     $('vCash').textContent = tl(S.cash);
-    var pr = G.rt.profit;
+    var fl = G.flow(), pr = fl.profit;
     $('vProfit').textContent = (pr >= 0 ? '+' : '') + tl(pr) + '/sn';
     $('vProfit').className = 'led-sub' + (pr < 0 ? ' neg' : '');
     $('vStock').textContent = f(S.stock);
-    $('vDepot').textContent = S.stock < 1 && G.rt.sell > 0.05 ? 'Gelen anında satılıyor' : 'Kapasite ' + f(G.depotCap()) + ' · ' + D.DEPOTS[S.depot].name;
+    $('vDepot').textContent = S.stock < 1 && fl.sell > 0.05 ? 'Gelen anında satılıyor' : 'Kapasite ' + f(G.depotCap()) + ' · ' + D.DEPOTS[S.depot].name;
     var fill = S.stock / G.depotCap();
     $('barStock').style.transform = 'scaleX(' + Math.min(1, fill).toFixed(4) + ')';
     $('barStock').parentNode.classList.toggle('full', fill > 0.97);
@@ -406,7 +406,7 @@
     $('combo').textContent = S.crew.hakan && combo >= 5 ? 'Kombo ×' + combo + ' · +' + pct(G.comboBonus()) : '';
 
     var sup = G.supTotal(), ch = G.chanTotal(), mx = Math.max(sup, ch, 0.0001);
-    var aBuy = Math.max(0, G.rt.buy), aSell = Math.max(0, G.rt.sell);
+    var aBuy = fl.buy, aSell = fl.sell;
     setTrack($('barBuy'), $('capBuy'), sup, aBuy, mx);
     setTrack($('barSell'), $('capSell'), ch, aSell, mx);
     setHtml($('vBuyRate'), 'vBuyRate', rateText(aBuy, sup));
@@ -476,7 +476,7 @@
       var r = adv && adv.rec;
       if (!r) return;
       if (r.cost <= S.cash) {
-        if (r.type === 'unit') { S[r.kind === 's' ? 'sup' : 'chan'][r.i]++; S.cash -= r.cost; G.emit('unit', { kind: r.kind, i: r.i, m: 1 }); floatText(r.name + ' +1', r.kind === 's' ? 'buyf' : 'sellf', e.clientX, e.clientY); }
+        if (r.type === 'unit') { S[r.kind === 's' ? 'sup' : 'chan'][r.i] += r.m; S.cash -= r.cost; G.emit('unit', { kind: r.kind, i: r.i, m: r.m }); floatText(r.name + ' +' + r.m, r.kind === 's' ? 'buyf' : 'sellf', e.clientX, e.clientY); }
         else if (r.type === 'upg') G.buyUpgrade(r.id);
         else if (r.type === 'depot') G.buyDepot();
       } else {

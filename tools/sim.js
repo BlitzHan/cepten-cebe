@@ -62,7 +62,7 @@ while (simT < HOURS * 3600) {
     for (var g2 = 0; g2 < 50; g2++) {
       var a = G.advice(), r = a.rec;
       if (!r || r.cost > S.cash) break;
-      if (r.type === 'unit') { S[r.kind === 's' ? 'sup' : 'chan'][r.i]++; S.cash -= r.cost; }
+      if (r.type === 'unit') { S[r.kind === 's' ? 'sup' : 'chan'][r.i] += r.m; S.cash -= r.cost; }
       else if (r.type === 'upg') G.buyUpgrade(r.id);
       else if (r.type === 'depot') G.buyDepot();
     }
