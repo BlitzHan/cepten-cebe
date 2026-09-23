@@ -104,21 +104,26 @@
     h += isS
       ? '<p class="hint">Tedarikçiler saniyede telefon alır ve nakitten öder. Alış çarpanı düşük olan daha ucuza alır.</p>'
       : '<p class="hint">Satış kanalları stoktaki telefonları otomatik satar. Satış çarpanı yüksek olan daha kârlı satar.</p>';
+    h += '<p class="hint">🎖️ <b>Tecrübeye çevir:</b> bir türden yeterince birimin olunca bir kısmını kapatıp kalıcı kondisyon kazanırsın. Her tür için turda bir kez. Eski işler oyunun ortasında bu yüzden değerli.</p>';
     for (var i = 0; i < vis; i++) {
       var u = list[i], n = owned[i];
       var amt = G.buyAmount(kind, i), cost = G.unitCost(kind, i, amt);
       var one = isS ? G.supRateOne(i) : G.chanRateOne(i);
       var unitPrice = isS ? bp * u.mult : sp * u.mult;
+      var ri = G.retireInfo(kind, i);
       h += '<div class="card unit' + (cost <= S.cash ? ' can' : '') + '">' +
         '<div class="ico">' + u.icon + '</div>' +
         '<div class="info"><div class="nm">' + u.name + (n ? ' <span class="own">×' + n + '</span>' : '') + '</div>' +
         '<div class="ds">' + u.desc + '</div>' +
         '<div class="meta"><span>+' + fr(one) + ' tel/sn</span>' +
         '<span class="' + (isS ? (u.mult < 1 ? 'good' : '') : (u.mult >= 1 ? 'good' : 'warn')) + '">' + (isS ? 'alış ' : 'satış ') + mult(u.mult) + ' · ' + tl(unitPrice) + '</span>' +
-        (n ? '<span>toplam ' + fr(one * n) + '/sn</span>' : '') + '</div></div>' +
+        (n ? '<span>toplam ' + fr(one * n) + '/sn</span>' : '') +
+        (ri.done ? '<span class="gold">🎖️ tecrübe alındı</span>' : ri.ready ? '' : '<span class="muted">🎖️ ' + n + '/' + ri.need + ' birimde +' + pct(ri.gain) + ' kondisyon</span>') +
+        '</div></div>' +
         '<div class="act"><button class="btn buyu" data-act="unit" data-k="' + kind + '" data-i="' + i + '"' + (cost > S.cash ? ' disabled' : '') + '>' +
         '<small>Al ×' + amt + '</small><b>' + tl(cost) + '</b></button>' +
-        (n ? '<button class="linkbtn" data-act="dispose" data-k="' + kind + '" data-i="' + i + '">Devret</button>' : '') +
+        (ri.ready ? '<button class="btn vet" data-act="retire" data-k="' + kind + '" data-i="' + i + '"><small>' + ri.need + ' birim ver</small><b>🎖️ +' + pct(ri.gain) + ' kondisyon</b></button>' : '') +
+        (n ? '<button class="linkbtn" data-act="dispose" data-k="' + kind + '" data-i="' + i + '">Hepsini devret</button>' : '') +
         '</div></div>';
     }
     if (vis < list.length) {
@@ -253,7 +258,7 @@
     var S = G.S;
     var anyUnit = function (kind) {
       var list = kind === 's' ? D.SUPPLIERS : D.CHANNELS;
-      for (var i = 0; i < list.length; i++) if (G.unitCost(kind, i) <= S.cash && (S.stats.earnedAll >= list[i].cost * 0.25 || i === 0)) return true;
+      for (var i = 0; i < list.length; i++) if (G.retireInfo(kind, i).ready || G.unitCost(kind, i) <= S.cash && (S.stats.earnedAll >= list[i].cost * 0.25 || i === 0)) return true;
       return false;
     };
     var upg = G.upgradesAvailable().some(function (u) { return u.cost <= S.cash; }) ||
@@ -391,6 +396,7 @@
     if (type === 'era') { G.sfx('era'); addLog('📱 ' + d.name + ' çağına geçildi', 'good'); toast('<b>Yeni çağ!</b> ' + d.name, 'gold', 5000); }
     if (type === 'depot') { G.sfx('upgrade'); addLog('🏚️ Depo büyüdü: ' + d.name, 'good'); }
     if (type === 'hire') { G.sfx('upgrade'); addLog(d.icon + ' ' + d.name + ' işe alındı', 'good'); }
+    if (type === 'retire') { G.sfx('upgrade'); addLog('🎖️ ' + d.need + ' ' + d.u.name + ' tecrübeye çevrildi: +' + pct(d.gain) + ' kondisyon', 'gold'); toast('🎖️ <b>' + d.u.name + '</b> tecrübesi: +' + pct(d.gain) + ' kondisyon', 'gold'); }
     if (type === 'dispose') { addLog('🔑 ' + d.n + ' birim devredildi: +' + tl(d.v), ''); }
     if (type === 'part') {
       if (d.ok) { G.sfx('upgrade'); addLog('🪛 ' + d.p.name + ' tuttu: +' + pct(d.p.gain) + ' kondisyon', 'good'); toast('🪛 <b>' + d.p.name + '</b> tuttu! +' + pct(d.p.gain) + ' kondisyon', 'good'); }
@@ -413,6 +419,11 @@
       var k = b.dataset.k, i = +b.dataset.i, u = (k === 's' ? D.SUPPLIERS : D.CHANNELS)[i];
       modal('Devret: ' + u.name, 'Tüm ' + u.name + ' birimlerini (' + (k === 's' ? S.sup : S.chan)[i] + ' adet) elden çıkarırsın ve harcadığın paranın yarısını, <b>' + tl(G.refundValue(k, i)) + '</b> geri alırsın.',
         [{ label: 'Vazgeç' }, { label: 'Devret', danger: true, fn: function () { G.disposeUnit(k, i); } }]);
+    }
+    else if (a === 'retire') {
+      var rk = b.dataset.k, ri2 = +b.dataset.i, ru = (rk === 's' ? D.SUPPLIERS : D.CHANNELS)[ri2], inf = G.retireInfo(rk, ri2);
+      modal('Tecrübeye çevir: ' + ru.name, ru.icon + ' <b>' + inf.need + ' ' + ru.name + '</b> birimi kapanır, para iadesi yok. Karşılığında kondisyon kalıcı olarak <b>+' + pct(inf.gain) + '</b> artar ve tüm satış fiyatların yükselir.<br><br>Bu türle bunu bu turda bir kez yapabilirsin. Kalan birimler çalışmaya devam eder.',
+        [{ label: 'Vazgeç' }, { label: '🎖️ Tecrübeye çevir', primary: true, fn: function () { G.retire(rk, ri2); } }]);
     }
     else if (a === 'upg') G.buyUpgrade(b.dataset.id);
     else if (a === 'era') G.buyEra();

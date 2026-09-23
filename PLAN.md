@@ -119,6 +119,9 @@ Ekranda canlı "Alış hızı / Satış hızı" çubuğu. Tedarik öndeyse stok 
 ### Depo (Dr. Meth'teki mekân sınırının karşılığı)
 Dolap 50 → Oda 500 → Depo 5 Bin → Lojistik Merkezi 100 Bin → Liman Antreposu 5 Mn. Her seviye bir kerelik yükseltme.
 
+### Tecrübeye çevir (sonradan eklendi)
+Dr. Meth'te son yükseltmeden sonra belli sayıda aşçıyı feda edip saflık kazanılıyordu. Bizde her tedarik ve satış türünün bir eşiği var (kademe sırasıyla 50, 50, 40, 40, 30, 30, 25, 20, 15 birim). Eşiğe ulaşınca o kadar birim kapatılır, para iadesi yok, kalıcı +%3 ile +%7 arası kondisyon gelir. Her tür için turda bir kez yapılabilir, böylece al-kapat döngüsü sömürülemez. 18 türün tamamı yaklaşık +%86 kondisyon eder.
+
 ### Dükkân devretme
 Herhangi bir birimi toptan elden çıkarırsın, harcadığın paranın %50'si geri gelir (Dr. Meth'teki "sell house"). Erken oyunda ucuz birimleri satıp yeni kategoriye geçmek için.
 

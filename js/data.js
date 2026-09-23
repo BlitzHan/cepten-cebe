@@ -60,6 +60,14 @@ G.D = {
     { id: 'mars',      icon: '🚀', name: 'Mars Bayiliği',      rate: 22000,   mult: 1.50, cost: 4.7e13,  desc: 'Kızıl gezegende tek yetkili satıcı.' }
   ],
 
+  // Tecrübeye çevir (Dr. Meth'teki işçi feda etme): o türden `need` birim kapatılır,
+  // para iadesi yok, kalıcı +gain kondisyon. Her tür için turda bir kez. Sıra kademe sırasıdır.
+  RETIRE: [
+    { need: 50, gain: 0.03 }, { need: 50, gain: 0.03 }, { need: 40, gain: 0.04 },
+    { need: 40, gain: 0.04 }, { need: 30, gain: 0.05 }, { need: 30, gain: 0.05 },
+    { need: 25, gain: 0.06 }, { need: 20, gain: 0.06 }, { need: 15, gain: 0.07 }
+  ],
+
   DEPOTS: [
     { name: 'Dolap',            cap: 50,  cost: 0 },
     { name: 'Oda',              cap: 500, cost: 12000 },

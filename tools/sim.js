@@ -48,6 +48,10 @@ while (simT < HOURS * 3600) {
   if (S.stock >= G.depotCap() * 0.8 || G.supTotal() * 20 > G.depotCap()) G.buyDepot();
   G.partsAvailable().forEach(function (p) { if (S.stock >= p.phones && S.stock * 0.5 >= p.phones * 0.2) G.tryPart(p.id); });
   D.CREW.forEach(function (c) { if (S.cash >= c.cost * 2) G.hire(c.id); });
+  if (!process.env.NORETIRE) {
+    D.SUPPLIERS.forEach(function (u, i) { if (G.retireInfo('s', i).ready && G.supRate(i) < G.supTotal() * 0.03) { G.retire('s', i); mark('Tecrübe: ' + u.name); } });
+    D.CHANNELS.forEach(function (u, i) { if (G.retireInfo('c', i).ready && G.chanRate(i) < G.chanTotal() * 0.03) { G.retire('c', i); mark('Tecrübe: ' + u.name); } });
+  }
   for (var guard = 0; guard < 50; guard++) {
     var ups = G.upgradesAvailable();
     var bs = best(D.SUPPLIERS.length, sScore), bc = best(D.CHANNELS.length, cScore);

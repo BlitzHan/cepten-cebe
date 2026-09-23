@@ -17,7 +17,7 @@
       v: 1, cash: D.START_CASH, stock: 0, cond: D.START_COND, era: 0, depot: 0,
       sup: D.SUPPLIERS.map(function () { return 0; }),
       chan: D.CHANNELS.map(function () { return 0; }),
-      upg: {}, crew: {}, ach: {}, buffs: {}, cd: {},
+      upg: {}, crew: {}, ach: {}, buffs: {}, cd: {}, retired: {},
       t: 0, nextEvent: 90, nextOffer: 300, selinT: 0,
       stats: { earned: 0, earnedAll: 0, spent: 0, bought: 0, sold: 0, clicks: 0, play: 0, playAll: 0,
                lowSold: 0, fails: 0, customers: 0, ipos: 0, disposed: {} },
@@ -169,6 +169,20 @@
     G.S.stats.disposed[list(kind)[i].id] = (G.S.stats.disposed[list(kind)[i].id] || 0) + n;
     G.emit('dispose', { kind: kind, i: i, n: n, v: v });
     return v;
+  };
+
+  G.retireInfo = function (kind, i) {
+    var r = D.RETIRE[i], done = !!G.S.retired[kind + i];
+    return { need: r.need, gain: r.gain, done: done, ready: !done && owned(kind)[i] >= r.need };
+  };
+  G.retire = function (kind, i) {
+    var r = G.retireInfo(kind, i);
+    if (!r.ready) return false;
+    owned(kind)[i] -= r.need;
+    G.S.retired[kind + i] = 1;
+    G.S.cond += r.gain;
+    G.emit('retire', { u: list(kind)[i], need: r.need, gain: r.gain });
+    return true;
   };
 
   // ---------- tıklama ----------
@@ -402,6 +416,7 @@
     { id: 'koleksiyon',icon: '🏆', name: 'Koleksiyonluk',           desc: 'Kondisyonu %150\'ye çıkar.',             ok: function (S) { return S.cond >= 1.5 - 1e-9; } },
     { id: 'kumar',    icon: '🎲', name: 'Elimde Kaldı',            desc: '5 kez "Parça için sök" başarısız olsun.', ok: function (S) { return S.stats.fails >= 5; } },
     { id: 'cekmece',  icon: '🗄️', name: 'Çekmeceler Boşaldı',      desc: 'Kuzen Mert\'i devret.',                  ok: function (S) { return S.stats.disposed.kuzen > 0; } },
+    { id: 'tecrube',  icon: '🎖️', name: 'Eski Kurt',               desc: '5 birim türünü tecrübeye çevir.',         ok: function (S) { return Object.keys(S.retired).length >= 5; } },
     { id: 'tik',      icon: '👆', name: 'Tık Tık',                 desc: '1.000 kez tıkla.',                       ok: function (S) { return S.stats.clicks >= 1000; } },
     { id: 'parmak',   icon: '💪', name: 'Parmak Kası',             desc: '10.000 kez tıkla.',                      ok: function (S) { return S.stats.clicks >= 1e4; } },
     { id: 'seri',     icon: '⚡', name: 'Seri Tıklayıcı',          desc: '10 saniyede 100 tık.',                   ok: function () { return G.clickLog.length >= 100; } },
