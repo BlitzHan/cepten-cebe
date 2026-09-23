@@ -134,8 +134,8 @@ G.D = {
     { id: 'hakan',  icon: '🛠️', name: 'Usta Teknisyen Fatih',   cost: 1.7e6,   desc: 'Telefonları elden geçirir: kondisyon kalıcı +%10, Parça için sök şansı +%15.' },
     { id: 'nurten', icon: '🧮', name: 'Muhasebeci Ezgi',        cost: 1.5e7,   desc: '5 dakikada bir %1–10 getirili yatırım teklifi. Kabul edince 30 dk bekler.' },
     { id: 'can',    icon: '📣', name: 'Pazarlamacı Ahmet',      cost: 1.5e8,   desc: '"Kampanya" butonu: 30 sn satış fiyatı ×2. 10 dk bekleme.' },
-    { id: 'selin',  icon: '🧑‍💼', name: 'İK\'cı Selin',          cost: 1.5e9,   desc: 'Her 3 saniyede en ucuz satış kanalına bedava personel ekler.' },
-    { id: 'deniz',  icon: '⚖️', name: 'Avukat Deniz',           cost: 1.5e10,   desc: 'Alışlar %5 ucuz, devretme iadesi %50 yerine %75, olumsuz olaylar yarı sürede biter.' }
+    { id: 'selin',  icon: '🧑‍💼', name: 'İK\'cı Melisa',          cost: 1.5e9,   desc: 'Her 3 saniyede en ucuz satış kanalına bedava personel ekler.' },
+    { id: 'deniz',  icon: '⚖️', name: 'Avukat Kadri',           cost: 1.5e10,   desc: 'Alışlar %5 ucuz, devretme iadesi %50 yerine %75, olumsuz olaylar yarı sürede biter.' }
   ],
 
   PERKS: [

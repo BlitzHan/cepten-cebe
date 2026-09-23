@@ -12,7 +12,7 @@ Hedef adres: `https://blitzhan.github.io/cepten-cebe/`
 >
 > - **Kademe verimi (sonradan):** ilk dengede her kademe bir öncekinden lira başına 4–10 kat verimsizdi; oyuncu hep ilk kademeye takılıyordu. Artık kademe maliyeti `hız × 2,5^kademe / ilk kademe verimi × 2`. Her kademe bir öncekinden ×2,5 verimsiz; bir alt kademeden 6–7 fazla alınca üst kademe öne geçer. Çağ bedelleri ×3.
 >
-> - **Ekonomi gözden geçirmesi (sonradan):** tedarik alış çarpanları kademe ilerledikçe düzenli düşüyor (0,95 → 0,35), satış kanalları 0,90 ile 1,50 arasında. Telefoncuya Toptan 75 Bin yerine 38 Bin ₺ ve 0,90 çarpan (önceden kârsızdı). Usta Teknisyen Fatih artık tıklama kombosu değil kalıcı +%10 kondisyon ve +%15 parça sökme şansı veriyor. Avukat Deniz alışları %5 ucuzlatıyor ve devretme iadesini %75'e çıkarıyor. Kural: elle al/sat hiçbir göstergeyi (kâr/sn, bant, kondisyon, öneri) değiştirmez. Bunların hepsi otomasyonun kalıcı akışından, min(tedarik, satış) üzerinden hesaplanır.
+> - **Ekonomi gözden geçirmesi (sonradan):** tedarik alış çarpanları kademe ilerledikçe düzenli düşüyor (0,95 → 0,35), satış kanalları 0,90 ile 1,50 arasında. Telefoncuya Toptan 75 Bin yerine 38 Bin ₺ ve 0,90 çarpan (önceden kârsızdı). Usta Teknisyen Fatih artık tıklama kombosu değil kalıcı +%10 kondisyon ve +%15 parça sökme şansı veriyor. Avukat Kadri alışları %5 ucuzlatıyor ve devretme iadesini %75'e çıkarıyor. Kural: elle al/sat hiçbir göstergeyi (kâr/sn, bant, kondisyon, öneri) değiştirmez. Bunların hepsi otomasyonun kalıcı akışından, min(tedarik, satış) üzerinden hesaplanır.
 
 - **Çağlar ucuzladı (sonradan):** oyuncular tuşlu telefonda takılıyordu. Çağ bedelleri 600 Bin, 50 Mn, 12 Mr, 3 Tn, 500 Tn ₺. Öneri kutusu çağ atlamayı kâra etkisi en iyi birimden verimliyse doğrudan öneriyor; üst tabelada sonraki çağa yüzde kaç biriktiği görünüyor. Halka arz eşiği 1 Tn ₺, hisse birimi 30 Mr. Öneriyi izleyen bot: Kapaklı 11 dk, Dokunmatik 33 dk, Akıllı 1 sa, halka arz yaklaşık 1,1–1,2 sa.
 
@@ -150,7 +150,7 @@ Herhangi bir birimi toptan elden çıkarırsın, harcadığın paranın %50'si g
 | **Muhasebeci Ezgi** | 5 dakikada bir nakitin %1–10'u getirili yatırım teklifi, 30 dk bekleme |
 | **Usta Teknisyen Fatih** | Kombo tıklama kondisyonu geçici artırır |
 | **Mağaza Müdürü** | "Toplu Al / Toplu Sat" (bedelli, 2 dk bekleme) ve "Maks. birim al" butonları |
-| **İK'cı Selin** | Her 3 sn'de en ucuz satış kanalına bedava personel ekler |
+| **İK'cı Melisa** | Her 3 sn'de en ucuz satış kanalına bedava personel ekler |
 | **Pazarlamacı Ahmet** | "Kampanya" butonu: 30 sn satış fiyatı ×3, 10 dk bekleme |
 | **Avukat** | Olumsuz olayların (gümrük, kur) süresini yarıya indirir |
 
