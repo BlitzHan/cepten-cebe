@@ -45,3 +45,7 @@ Tek dil: floresan tüp. AL/SAT basınca titreme, bant sürekli akar, olay çıka
 
 ## Yerleşim
 Masaüstü: 360px tezgâh | vitrin | 290px dükkân duvarı. Sayfa kaymaz, sütunlar kendi içinde kayar. 1180px altında iki sütun, 760px altında tek sütun.
+
+## Bant ve kâr/sn: standart + (olay farkı)
+
+Alış/satış bandı ve kasadaki kâr/sn önce standart değeri yazar: olaylar hariç, birimlerin ve kalıcı yükseltmelerin verdiği hız. Kısa süreli olayların (Yeni model, Efsane Cuma, Kur şoku, Kampanya, Gümrük) etkisi yanında parantez içinde durur: `24 (+24) tel/sn`, `+29.203 ₺/sn (+27.580 ₺)`. Artı yeşil (LED'de sarı), eksi kırmızı. Çubuk şu anki gerçek akışı çizer. Öneri kutusu, birim satırları ve dükkân duvarı yalnızca standart değerlere bakar; olay sırasında öneri değişmez.

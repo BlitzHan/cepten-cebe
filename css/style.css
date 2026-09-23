@@ -222,10 +222,16 @@ button:disabled { cursor: not-allowed; }
 
 /* ---------- tezgâh bandı ---------- */
 .belt { margin-top: 10px; background: var(--acrylic); border-radius: var(--r); padding: 9px 10px; box-shadow: var(--shadow); }
-.belt-row { display: grid; grid-template-columns: 40px 1fr 92px; gap: 8px; align-items: center; margin: 3px 0; }
+.belt-row { display: grid; grid-template-columns: 40px 1fr 124px; gap: 8px; align-items: center; margin: 3px 0; }
 .belt-row span { font-family: var(--cond); text-transform: uppercase; font-weight: 800; font-size: 12px; letter-spacing: .08em; color: var(--ink-3); font-variation-settings: 'wdth' 80; }
 .belt-row b { text-align: right; font-weight: 700; font-size: 13px; line-height: 1.15; }
 .belt-row b small { display: block; font-size: 10.5px; font-weight: 600; color: var(--ink-3); }
+/* Kısa süreli olay farkı: standart hızın yanında parantez içinde */
+.belt-row em, .led-sub em { font-style: normal; font-weight: 800; }
+.belt-row em.up { color: #16804A; }
+.belt-row em.down { color: var(--red); }
+.led-sub em.up { color: var(--yellow); }
+.led-sub em.down { color: #FFB3AA; }
 .track { position: relative; height: 12px; border-radius: 1px; background: #2A2D33; overflow: hidden; box-shadow: inset 0 1px 2px rgba(0, 0, 0, .5); }
 .track s { position: absolute; left: 0; top: 0; bottom: 0; background: rgba(255, 255, 255, .16); box-shadow: inset -2px 0 0 rgba(255, 255, 255, .45); }
 .track i { position: relative; }

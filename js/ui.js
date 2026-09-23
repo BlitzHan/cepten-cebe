@@ -101,7 +101,7 @@
     var S = G.S, isS = kind === 's';
     var list = unitList(kind), owned = isS ? S.sup : S.chan;
     var vis = visibleCount(list, owned);
-    var bp = G.buyPrice(), sp = G.sellPrice();
+    var bp = G.buyPrice(true), sp = G.sellPrice(true);  // standart değerler, olaylar hariç
     var h = modeBar();
     h += isS
       ? '<p class="hint">Tedarikçiler saniyede telefon alır ve parasını kasadan öder. Alış çarpanı düşük olan daha ucuza alır.</p>'
@@ -109,7 +109,7 @@
     for (var i = 0; i < vis; i++) {
       var u = list[i], n = owned[i];
       var amt = G.buyAmount(kind, i), cost = G.unitCost(kind, i, amt);
-      var one = isS ? G.supRateOne(i) : G.chanRateOne(i);
+      var one = isS ? G.supRateOne(i, true) : G.chanRateOne(i, true);
       var unitPrice = isS ? bp * u.mult : sp * u.mult;
       var ri = G.retireInfo(kind, i);
       var good = isS ? u.mult < 1 : u.mult >= 1;
@@ -314,8 +314,8 @@
       });
       return '<h4>' + title + '</h4>' + (any ? '<div class="tiles">' + t + '</div>' : '<p class="empty">Henüz yok.</p>');
     }
-    h += tiles('Tedarik', D.SUPPLIERS, S.sup, G.supRate, 'buy');
-    h += tiles('Satış noktaları', D.CHANNELS, S.chan, G.chanRate, 'sell');
+    h += tiles('Tedarik', D.SUPPLIERS, S.sup, function (i) { return G.supRate(i, true); }, 'buy');
+    h += tiles('Satış noktaları', D.CHANNELS, S.chan, function (i) { return G.chanRate(i, true); }, 'sell');
     var bonus = D.SHARE_BONUS * S.shares + D.ACH_BONUS * Object.keys(S.ach).length;
     if (bonus > 0) h += '<p class="bonus">' + (S.shares ? S.shares + ' hisse ve ' : '') + Object.keys(S.ach).length + ' başarım: otomatik hız +' + pct(bonus) + '</p>';
     setHtml($('empire'), 'empire', h + '</div>');
@@ -366,23 +366,29 @@
     var dur = actual > 0 ? Math.max(0.12, Math.min(2.5, 2.5 / Math.log10(actual + 10))) : 1;
     bar.style.animationDuration = dur.toFixed(2) + 's';
   }
-  function rateText(actual, capacity) {
-    var t = fr(actual) + ' tel/sn';
-    if (capacity > 0 && actual < capacity * 0.99) t += '<small>kapasite ' + fr(capacity) + '</small>';
-    return t;
+  // Kısa süreli olay farkı: standart değerin yanında parantez içinde. Çok küçük farklar gösterilmez.
+  function bonusTxt(base, now, fmt) {
+    var d = now - base;
+    if (Math.abs(d) <= Math.max(0.05, Math.abs(base) * 0.005)) return '';
+    return ' <em class="' + (d > 0 ? 'up' : 'down') + '">(' + (d > 0 ? '+' : '−') + fmt(Math.abs(d)) + ')</em>';
+  }
+  function rateText(base, now, capacity) {
+    var cap = capacity > 0 && base < capacity * 0.99 ? ' · kapasite ' + fr(capacity) : '';
+    return fr(base) + bonusTxt(base, now, fr) + '<small>tel/sn' + cap + '</small>';
   }
 
   function render() {
     var S = G.S;
     $('vCash').textContent = tl(S.cash);
-    var fl = G.flow(), pr = fl.profit;
-    $('vProfit').textContent = (pr >= 0 ? '+' : '') + tl(pr) + '/sn';
+    // Kâr/sn: standart kazanç hep görünür, olayların geçici etkisi parantez içinde.
+    var fl = G.flow(), pr = fl.base.profit;
+    setHtml($('vProfit'), 'vProfit', (pr >= 0 ? '+' : '') + tl(pr) + '/sn' + bonusTxt(pr, fl.profit, tl));
     $('vProfit').className = 'led-sub' + (pr < 0 ? ' neg' : '');
     $('vStock').textContent = f(S.stock);
     $('vDepot').textContent = fl.broke ? 'Kasa boş · tedarik parası kadar alıyor'
       : S.stock < 1 && fl.sell > 0.05 ? 'Gelen anında satılıyor'
       : fl.filling ? 'Depo doluyor · ' + G.fmtTime(fl.fillIn) + ' sonra dolar'
-      : S.stock >= G.depotCap() * 0.5 && fl.buy < G.supTotal() ? 'Depo dolu (' + f(G.depotCap()) + ') · satıldıkça alınıyor'
+      : S.stock >= G.depotCap() * 0.5 && fl.base.buy < fl.base.sup ? 'Depo dolu (' + f(G.depotCap()) + ') · satıldıkça alınıyor'
       : 'Kapasite ' + f(G.depotCap()) + ' · ' + D.DEPOTS[S.depot].name;
     var fill = S.stock / G.depotCap();
     $('barStock').style.transform = 'scaleX(' + Math.min(1, fill).toFixed(4) + ')';
@@ -407,12 +413,12 @@
     $('vMargin').textContent = 'Telefon başı kâr: ' + (margin >= 0 ? '+' : '') + tl(margin);
 
 
-    var sup = G.supTotal(), ch = G.chanTotal(), mx = Math.max(sup, ch, 0.0001);
-    var aBuy = fl.buy, aSell = fl.sell;
-    setTrack($('barBuy'), $('capBuy'), sup, aBuy, mx);
-    setTrack($('barSell'), $('capSell'), ch, aSell, mx);
-    setHtml($('vBuyRate'), 'vBuyRate', rateText(aBuy, sup));
-    setHtml($('vSellRate'), 'vSellRate', rateText(aSell, ch));
+    // Bant: çubuk şu anki gerçek akışı çizer; yazı standart hızı ve olay farkını ayrı verir.
+    var B = fl.base, mx = Math.max(B.sup, B.ch, fl.sup, fl.ch, 0.0001);
+    setTrack($('barBuy'), $('capBuy'), Math.max(B.sup, fl.sup), fl.buy, mx);
+    setTrack($('barSell'), $('capSell'), Math.max(B.ch, fl.ch), fl.sell, mx);
+    setHtml($('vBuyRate'), 'vBuyRate', rateText(B.buy, fl.buy, B.sup));
+    setHtml($('vSellRate'), 'vSellRate', rateText(B.sell, fl.sell, B.ch));
 
     var q = '';
     if (S.crew.mudur) {

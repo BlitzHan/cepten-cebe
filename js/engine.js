@@ -86,12 +86,14 @@
   G.era = function () { return D.ERAS[G.S.era]; };
   // Etkin kondisyon: tıklamadan bağımsız. Usta Teknisyen Fatih kalıcı +%10 ekler.
   G.condEff = function () { return G.S.cond + (G.S.crew.hakan ? 0.1 : 0); };
-  G.buyPrice = function () {
-    return G.era().buy * effProduct('buy') * (G.S.crew.deniz ? 0.95 : 1) * (G.buff('kur') ? 1.2 : 1);
+  // base = true: geçici olaylar (kur, kampanya, efsane, yeni model, gümrük) hariç standart değer.
+  G.buyPrice = function (base) {
+    return G.era().buy * effProduct('buy') * (G.S.crew.deniz ? 0.95 : 1) * (!base && G.buff('kur') ? 1.2 : 1);
   };
-  G.sellPrice = function () {
-    return G.era().sell * (0.5 + G.condEff()) * effProduct('sell') *
-      (G.buff('kur') ? 1.3 : 1) * (G.buff('kampanya') ? 2 : 1) * (G.buff('efsane') ? 0.9 : 1);
+  G.sellPrice = function (base) {
+    var p = G.era().sell * (0.5 + G.condEff()) * effProduct('sell');
+    if (base) return p;
+    return p * (G.buff('kur') ? 1.3 : 1) * (G.buff('kampanya') ? 2 : 1) * (G.buff('efsane') ? 0.9 : 1);
   };
   G.bonusMult = function () {
     return 1 + D.SHARE_BONUS * G.S.shares + D.ACH_BONUS * Object.keys(G.S.ach).length;
@@ -101,24 +103,24 @@
     D.UNIT_TIERS.forEach(function (t, k) { if (G.S.upg[kind + i + '_' + k]) m *= 2; });
     return m;
   };
-  G.supRateOne = function (i) {
-    if (D.SUPPLIERS[i].id === 'ithalat' && G.buff('gumruk')) return 0;
+  G.supRateOne = function (i, base) {
+    if (!base && D.SUPPLIERS[i].id === 'ithalat' && G.buff('gumruk')) return 0;
     return D.SUPPLIERS[i].rate * G.unitMult('s', i) * effProduct('sup') * G.bonusMult();
   };
-  G.chanRateOne = function (i) {
-    return D.CHANNELS[i].rate * G.unitMult('c', i) * effProduct('chan') * G.bonusMult() *
-      (G.buff('yeniModel') ? 2 : 1) * (G.buff('efsane') ? 3 : 1);
+  G.chanRateOne = function (i, base) {
+    var r = D.CHANNELS[i].rate * G.unitMult('c', i) * effProduct('chan') * G.bonusMult();
+    return base ? r : r * (G.buff('yeniModel') ? 2 : 1) * (G.buff('efsane') ? 3 : 1);
   };
-  G.supRate = function (i) { return G.S.sup[i] * G.supRateOne(i); };
-  G.chanRate = function (i) { return G.S.chan[i] * G.chanRateOne(i); };
-  G.supTotal = function () { var s = 0; for (var i = 0; i < D.SUPPLIERS.length; i++) s += G.supRate(i); return s; };
-  G.chanTotal = function () { var s = 0; for (var i = 0; i < D.CHANNELS.length; i++) s += G.chanRate(i); return s; };
+  G.supRate = function (i, base) { return G.S.sup[i] * G.supRateOne(i, base); };
+  G.chanRate = function (i, base) { return G.S.chan[i] * G.chanRateOne(i, base); };
+  G.supTotal = function (base) { var s = 0; for (var i = 0; i < D.SUPPLIERS.length; i++) s += G.supRate(i, base); return s; };
+  G.chanTotal = function (base) { var s = 0; for (var i = 0; i < D.CHANNELS.length; i++) s += G.chanRate(i, base); return s; };
   G.depotCap = function () { return D.DEPOTS[G.S.depot].cap; };
   G.space = function () { return Math.max(0, G.depotCap() - G.S.stock); };
   G.clickPower = function (kind) {
     var p = 1;
     D.CLICK_TIERS.forEach(function (c, k) { if (G.S.upg['click' + k]) p = c.p; });
-    if (G.S.upg.kasaSesi) p += 0.03 * (kind === 'buy' ? G.supTotal() : G.chanTotal());
+    if (G.S.upg.kasaSesi) p += 0.03 * (kind === 'buy' ? G.supTotal(true) : G.chanTotal(true));
     return Math.max(1, Math.floor(p));
   };
 
@@ -329,17 +331,17 @@
   // O tarafın hızının (ya da açığın) %3'ünden azını ekleyen seçenek elenir; 20 tel/sn açıkta +0,1 bir şey çözmez.
   G.bestFor = function (kind, gap) {
     var isS = kind === 's';
-    var sideTotal = isS ? G.supTotal() : G.chanTotal();
+    var sideTotal = isS ? G.supTotal(true) : G.chanTotal(true);
     var floor = 0.03 * Math.max(sideTotal, gap > 0 ? gap : 0);
     var all = [];
     list(kind).forEach(function (u, i) {
       if (!G.visibleUnit(kind, i)) return;
-      var cost = G.unitCost(kind, i), gain = isS ? G.supRateOne(i) : G.chanRateOne(i);
+      var cost = G.unitCost(kind, i), gain = isS ? G.supRateOne(i, true) : G.chanRateOne(i, true);
       all.push({ type: 'unit', kind: kind, i: i, m: 1, name: u.name, cost: cost, gain: gain });
     });
     G.upgradesAvailable().forEach(function (up) {
       var gain = 0, mm = /^([sc])(\d+)_\d+$/.exec(up.id);
-      if (mm && mm[1] === kind) gain = isS ? G.supRate(+mm[2]) : G.chanRate(+mm[2]);
+      if (mm && mm[1] === kind) gain = isS ? G.supRate(+mm[2], true) : G.chanRate(+mm[2], true);
       var g = D.GLOBAL_UPS.filter(function (x) { return x.id === up.id; })[0];
       if (g && g.eff[isS ? 'sup' : 'chan']) gain = sideTotal * (g.eff[isS ? 'sup' : 'chan'] - 1);
       if (gain > 0) all.push({ type: 'upg', kind: kind, id: up.id, name: up.name, cost: up.cost, gain: gain, m: 1 });
@@ -352,37 +354,50 @@
   };
 
   // Otomasyonun sürekli akışı: tıklamalardan bağımsız, kapasite ve darboğazdan hesaplanır.
+  // Bandın ve kasadaki kâr/sn'nin kaynağı. İki katman döner:
+  //   base: standart üretim (geçici olaylar hariç), olay olmasa da hep böyle çalışır;
+  //   buy/sell/profit: şu anki gerçek akış (olaylar dahil). Arayüz "base (+fark)" yazar.
+  // Depo durumu gecikmeli (histerezis) izlenir ve eşikler standart hızlara bakar; böylece
+  // ne elle al/sat ne de kısa olaylar göstergeyi bir o yana bir bu yana savurur.
   G.flowState = { full: false, drain: false, broke: false };
+  function steadyProfit(sup, ch, base) {
+    var n = Math.min(sup, ch), bp = G.buyPrice(base), sp = G.sellPrice(base), left = n, cost = 0, rev = 0;
+    supOrder.forEach(function (i) { var k = Math.min(left, G.supRate(i, base)); cost += k * bp * D.SUPPLIERS[i].mult; left -= k; });
+    left = n;
+    chanOrder.forEach(function (j) { var k = Math.min(left, G.chanRate(j, base)); rev += k * sp * D.CHANNELS[j].mult; left -= k; });
+    return rev - cost;
+  }
+  function rates(sup, ch, st) {
+    // Depo doluysa tedarik satış hızına iner; stok varsa satış tam kapasite çalışır.
+    if (sup > ch) return { buy: st.full ? ch : sup, sell: ch };
+    return { buy: sup, sell: st.drain ? ch : sup };
+  }
   G.flow = function () {
-    var S = G.S, sup = G.supTotal(), ch = G.chanTotal();
-    // Bant otomasyonun gerçek durumunu gösterir: depo doluyorsa tedarikçiler tam hızda alır,
-    // dolunca satış hızına iner. Durum geçişleri gecikmeli (histerezis): dolu sayılmak için depo
-    // neredeyse dolmalı (%98 ya da 2 sn'lik satış kadar boşluk), boş sayılmak için yarının altına inmeli. Birkaç elle tık bunu çeviremez.
-    var cap = G.depotCap(), st = G.flowState;
-    if (S.stock >= Math.min(cap * 0.98, cap - ch * 2)) st.full = true; else if (S.stock < cap * 0.5) st.full = false;
-    if (S.stock > Math.max(20, ch * 10)) st.drain = true; else if (S.stock < 1) st.drain = false;
+    var S = G.S, st = G.flowState, cap = G.depotCap();
+    var supB = G.supTotal(true), chB = G.chanTotal(true), sup = G.supTotal(), ch = G.chanTotal();
+    if (S.stock >= Math.min(cap * 0.98, cap - chB * 2)) st.full = true; else if (S.stock < cap * 0.5) st.full = false;
+    if (S.stock > Math.max(20, chB * 10)) st.drain = true; else if (S.stock < 1) st.drain = false;
     // Kasa yetmezse tedarikçiler parası olduğu kadar alır; o durumda ölçülen gerçek hız gösterilir.
-    var perSec = G.buyPrice() * sup;
+    var perSec = G.buyPrice(true) * supB;
     if (S.cash < perSec * 0.5) st.broke = true; else if (S.cash > perSec * 3) st.broke = false;
-    var buy, sell;
-    if (sup > ch) { buy = st.full ? ch : sup; sell = ch; }
-    else { buy = sup; sell = st.drain ? ch : sup; }
-    if (st.broke && sup > 0) { buy = Math.min(buy, G.rt.buy); sell = Math.min(sell, G.rt.sell); }
-    // Kasadaki kâr/sn kalıcı kazançtır: uzun vadede ancak satılan kadar alınır, min(tedarik, satış).
-    // Stoğa ve kasaya hiç bakmaz. Ucuz tedarikçi önce çalışır, pahalı kanal önce satar.
-    var steady = Math.min(sup, ch);
-    var bp = G.buyPrice(), sp = G.sellPrice();
-    var left = steady, cost = 0, rev = 0;
-    supOrder.forEach(function (i) { var n = Math.min(left, G.supRate(i)); cost += n * bp * D.SUPPLIERS[i].mult; left -= n; });
-    left = steady;
-    chanOrder.forEach(function (j) { var n = Math.min(left, G.chanRate(j)); rev += n * sp * D.CHANNELS[j].mult; left -= n; });
-    return { buy: buy, sell: sell, profit: rev - cost, filling: sup > ch && !st.full && !st.broke, broke: st.broke && sup > 0, fillIn: sup > ch ? Math.max(0, cap - S.stock) / (sup - ch) : 0 };
+    var broke = st.broke && supB > 0;
+    var b = rates(supB, chB, st), a = rates(sup, ch, st);
+    if (broke) {
+      b.buy = Math.min(b.buy, G.rt.buy); b.sell = Math.min(b.sell, G.rt.sell);
+      a.buy = Math.min(a.buy, G.rt.buy); a.sell = Math.min(a.sell, G.rt.sell);
+    }
+    return {
+      buy: a.buy, sell: a.sell, profit: steadyProfit(sup, ch, false),
+      base: { buy: b.buy, sell: b.sell, sup: supB, ch: chB, profit: steadyProfit(supB, chB, true) },
+      sup: sup, ch: ch, broke: broke,
+      filling: sup > ch && !st.full && !broke,
+      fillIn: sup > ch ? Math.max(0, cap - S.stock) / (sup - ch) : 0
+    };
   };
-  // Öneri sadece otomasyona bakar (tedarik ve satış hızı). Elle al/sat öneriyi değiştirmez.
   G.advice = function () {
-    var S = G.S, sup = G.supTotal(), ch = G.chanTotal();
+    var S = G.S, sup = G.supTotal(true), ch = G.chanTotal(true);  // standart hızlar: olaylar öneriyi değiştirmez
     var depotFull = S.stock >= G.depotCap() * 0.9;
-    G.flow();  // kasa durumu (flowState.broke) güncel olsun
+    var fl = G.flow();  // kasa durumu (flowState.broke) güncel olsun
     var a;
     if (sup === 0 && ch === 0) {
       a = { side: 's', head: 'İlk tedarikçini al', why: 'AL ve SAT\'a basarak para biriktir. Sonra telefonları senin yerine alacak birini, ardından satacak birini al.' };
@@ -403,11 +418,11 @@
     a.rec = G.bestFor(a.side, a.balanced ? 0 : Math.abs(sup - ch));
     // Çağ atlama öneriye girer: parası varsa, 10 dk'dan kısa sürede kendini ödüyorsa
     // ya da lira başına en iyi birimden çok kazandırıyorsa.
-    var ne = G.nextEra(), pr0 = Math.max(0, G.flow().profit);
+    var ne = G.nextEra(), pr0 = Math.max(0, fl.base.profit);
     if (ne && pr0 > 0) {
       var ratio = (ne.sell - ne.buy) / (G.era().sell - G.era().buy);
       var eraVal = pr0 * (ratio - 1) / ne.cost;
-      var unitVal = a.rec ? a.rec.gain * Math.max(0, G.sellPrice() - G.buyPrice()) / a.rec.cost : 0;
+      var unitVal = a.rec ? a.rec.gain * Math.max(0, G.sellPrice(true) - G.buyPrice(true)) / a.rec.cost : 0;
       if (S.cash >= ne.cost || ne.cost / (pr0 * (ratio - 1)) <= 600 || eraVal >= unitVal) {
         a.side = 'era'; a.balanced = false;
         a.head = ne.name + ' çağına geç';
@@ -416,7 +431,7 @@
       }
     }
     if (a.rec && a.rec.cost > S.cash) {
-      var pr = Math.max(0, G.flow().profit);
+      var pr = Math.max(0, fl.base.profit);
       a.eta = pr > 0 ? (a.rec.cost - S.cash) / pr : null;
     }
     var d = G.nextDepot();
@@ -444,14 +459,14 @@
   // ---------- olaylar ----------
   var EVENTS = [
     { id: 'musteri', w: 3, ok: function () { return G.S.stock >= 10; }, fire: function () {
-      var q = Math.max(20, Math.floor(G.chanTotal() * 15), G.clickPower('sell') * 5);
+      var q = Math.max(20, Math.floor(G.chanTotal(true) * 15), G.clickPower('sell') * 5);
       var price = G.sellPrice() * 1.5;
       G.offer = { id: 'musteri', until: G.S.t + 12, dur: 12, title: 'Kapıda pazarlıkçı müşteri',
         text: G.fmt(q) + ' telefonu tanesi ' + G.fmt(price) + ' ₺\'den alırım, çabuk karar ver!',
         btn: 'Sat', q: q, price: price };
     } },
     { id: 'cekmece', w: 2, ok: function () { return G.space() >= 5; }, fire: function () {
-      var q = Math.max(10, Math.floor(G.supTotal() * 20));
+      var q = Math.max(10, Math.floor(G.supTotal(true) * 20));
       G.offer = { id: 'cekmece', until: G.S.t + 12, dur: 12, title: 'Çekmece bereketi',
         text: 'Teyzen eski telefonları buldu: ' + G.fmt(q) + ' telefon bedava!', btn: 'Topla', q: q };
     } },
@@ -532,8 +547,8 @@
     { id: 'tik',      icon: '👆', name: 'Tık Tık',                 desc: '1.000 kez tıkla.',                       ok: function (S) { return S.stats.clicks >= 1000; } },
     { id: 'parmak',   icon: '💪', name: 'Parmak Kası',             desc: '10.000 kez tıkla.',                      ok: function (S) { return S.stats.clicks >= 1e4; } },
     { id: 'seri',     icon: '⚡', name: 'Seri Tıklayıcı',          desc: '10 saniyede 100 tık.',                   ok: function () { return G.clickLog.length >= 100; } },
-    { id: 'seriuretim',icon: '⚙️', name: 'Seri Üretim',             desc: 'Saniyede 100 telefon tedarik et.',       ok: function () { return G.supTotal() >= 100; } },
-    { id: 'sanayici', icon: '🏗️', name: 'Sanayici',                desc: 'Saniyede 10.000 telefon tedarik et.',    ok: function () { return G.supTotal() >= 1e4; } },
+    { id: 'seriuretim',icon: '⚙️', name: 'Seri Üretim',             desc: 'Saniyede 100 telefon tedarik et.',       ok: function () { return G.supTotal(true) >= 100; } },
+    { id: 'sanayici', icon: '🏗️', name: 'Sanayici',                desc: 'Saniyede 10.000 telefon tedarik et.',    ok: function () { return G.supTotal(true) >= 1e4; } },
     { id: 'lojistik', icon: '🚚', name: 'Lojistik Dâhisi',         desc: 'Lojistik Merkezi\'ne geç.',              ok: function (S) { return S.depot >= 3; } },
     { id: 'tikabasa', icon: '📦', name: 'Depo Tıka Basa',          desc: 'En az 500\'lük depoyu ağzına kadar doldur.', ok: function (S) { return G.depotCap() >= 500 && S.stock >= G.depotCap() - 0.5; } },
     { id: 'kapak',    icon: '📞', name: 'Kapak Açıldı',            desc: 'Kapaklı Telefon çağına geç.',            ok: function (S) { return S.era >= 1; } },
