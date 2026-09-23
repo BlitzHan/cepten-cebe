@@ -8,7 +8,7 @@
   G.emit = function (type, data) { for (var i = 0; i < G.listeners.length; i++) G.listeners[i](type, data); };
   G.rt = { buy: 0, sell: 0, profit: 0 };
   G.offer = null;          // bekleyen tıklanabilir teklif
-  G.clickLog = [];         // kombo ve seri tıklama için zaman damgaları (ms)
+  G.clickLog = [];         // seri tıklama başarımı için zaman damgaları (ms)
   G.now = function () { return Date.now(); };
 
   // ---------- durum ----------
@@ -84,18 +84,10 @@
 
   // ---------- fiyatlar ----------
   G.era = function () { return D.ERAS[G.S.era]; };
-  G.combo = function () {
-    var t = G.now(), n = 0;
-    for (var i = G.clickLog.length - 1; i >= 0 && t - G.clickLog[i] < 2000; i--) n++;
-    return n;
-  };
-  G.comboBonus = function () {
-    if (!G.S.crew.hakan) return 0;
-    return Math.min(0.25, Math.max(0, G.combo() - 4) * 0.01);
-  };
-  G.condEff = function () { return G.S.cond + G.comboBonus(); };
+  // Etkin kondisyon: tıklamadan bağımsız. Usta Teknisyen Fatih kalıcı +%10 ekler.
+  G.condEff = function () { return G.S.cond + (G.S.crew.hakan ? 0.1 : 0); };
   G.buyPrice = function () {
-    return G.era().buy * effProduct('buy') * (G.buff('kur') ? 1.2 : 1);
+    return G.era().buy * effProduct('buy') * (G.S.crew.deniz ? 0.95 : 1) * (G.buff('kur') ? 1.2 : 1);
   };
   G.sellPrice = function () {
     return G.era().sell * (0.5 + G.condEff()) * effProduct('sell') *
@@ -158,7 +150,7 @@
   };
   G.refundValue = function (kind, i) {
     var base = list(kind)[i].cost, n = owned(kind)[i], r = D.COST_GROWTH;
-    return base * (Math.pow(r, n) - 1) / (r - 1) * D.REFUND;
+    return base * (Math.pow(r, n) - 1) / (r - 1) * (G.S.crew.deniz ? 0.75 : D.REFUND);
   };
   G.disposeUnit = function (kind, i) {
     var n = owned(kind)[i];
@@ -291,6 +283,7 @@
     G.emit('depot', d);
     return true;
   };
+  G.partChance = function (p) { return Math.min(0.95, p.chance + (G.S.crew.hakan ? 0.15 : 0)); };
   G.partsAvailable = function () {
     return D.PARTS.filter(function (p, k) {
       return !G.S.upg[p.id] && (k === 0 || G.S.upg[D.PARTS[k - 1].id] || G.S.stats.sold >= p.phones * 2);
@@ -300,7 +293,7 @@
     var p = D.PARTS.filter(function (x) { return x.id === id; })[0];
     if (!p || G.S.upg[id] || G.S.stock < p.phones) return null;
     G.S.stock -= p.phones;
-    var ok = (roll === undefined ? Math.random() : roll) < p.chance;
+    var ok = (roll === undefined ? Math.random() : roll) < G.partChance(p);
     if (ok) { G.S.upg[id] = 1; G.S.cond += p.gain; }
     else G.S.stats.fails++;
     G.emit('part', { p: p, ok: ok });
@@ -356,25 +349,21 @@
   // Otomasyonun sürekli akışı: tıklamalardan bağımsız, kapasite ve darboğazdan hesaplanır.
   G.flow = function () {
     var S = G.S, sup = G.supTotal(), ch = G.chanTotal();
-    var backlog = S.stock > Math.max(20, ch * 10);            // depoda gerçekten birikmiş mal var mı
-    // Eşikler tıklamaya dayanıklı: birkaç tık depoyu boşaltıp kasayı doldursa da akış değişmez.
-    var depotFull = S.stock > G.depotCap() * 0.9 && sup > ch;
-    var cashShort = S.cash < G.buyPrice() * Math.max(1, sup) * 3;
-    var buy = sup;
-    if (depotFull || (cashShort && sup > ch)) buy = Math.min(sup, ch);  // satıldıkça alır
-    var sell = backlog ? ch : Math.min(ch, buy);
-    // Kâr, otomasyonun kalıcı kazancıdır: alınan kadar satılır (min(tedarik, satış)).
-    // Stok, kasa ve tıklama serisi (Fatih bonusu) hesaba girmez; elle al/sat bu sayıyı oynatmaz.
-    var n0 = Math.min(sup, ch);
-    var bp = G.buyPrice(), sp = G.sellPrice() * (0.5 + S.cond) / (0.5 + G.condEff());
-    var left = n0, cost = 0, rev = 0;
+    // Kalıcı akış: uzun vadede ancak satılan kadar alınır (fazlası depoyu doldurur, sonra alış durur).
+    // Stok ve kasaya bakılmaz; elle al/sat bu sayıları oynatamaz. Aradaki fark bantta "kapasite" olarak görünür.
+    var buy = Math.min(sup, ch), sell = buy;
+    // Kâr: ucuz tedarikçi önce çalışır, pahalı kanal önce satar.
+    var bp = G.buyPrice(), sp = G.sellPrice();
+    var left = buy, cost = 0, rev = 0;
     supOrder.forEach(function (i) { var n = Math.min(left, G.supRate(i)); cost += n * bp * D.SUPPLIERS[i].mult; left -= n; });
-    left = n0;
+    left = sell;
     chanOrder.forEach(function (j) { var n = Math.min(left, G.chanRate(j)); rev += n * sp * D.CHANNELS[j].mult; left -= n; });
     return { buy: buy, sell: sell, profit: rev - cost };
   };
+  // Öneri sadece otomasyona bakar (tedarik ve satış hızı). Elle al/sat öneriyi değiştirmez.
   G.advice = function () {
     var S = G.S, sup = G.supTotal(), ch = G.chanTotal();
+    var depotFull = S.stock >= G.depotCap() * 0.9;
     var a;
     if (sup === 0 && ch === 0) {
       a = { side: 's', head: 'İlk tedarikçini al', why: 'AL ve SAT\'a basarak para biriktir. Sonra telefonları senin yerine alacak birini, ardından satacak birini al.' };
@@ -382,29 +371,21 @@
       a = { side: 's', head: 'Tedarikçi al', why: 'Satış noktaların satacak telefon bekliyor ama alan kimse yok.' };
     } else if (ch === 0) {
       a = { side: 'c', head: 'Satış noktası aç', why: 'Telefonlar depoda birikiyor, satan kimse yok.' };
-    } else if (G.space() < 1 && ch >= sup * 0.95) {
-      a = { side: 'depot', head: 'Depoyu büyüt', why: 'Depo dolu ve tedarikçiler durdu.' };
-    } else if (G.space() < 1) {
-      a = { side: 'c', head: 'Satış noktası aç', why: 'Depo dolu, tedarikçiler durdu. Satış, alışa yetişemiyor.' };
-    } else if (S.cash < G.buyPrice() && S.stock >= 1) {
-      a = { side: 'c', head: 'Satışı artır', why: 'Kasa boş, tedarikçiler alacak para bulamıyor. Stoktakileri sat, satış noktası ekle.' };
     } else if (sup < ch * 0.85) {
       a = { side: 's', head: 'Tedarik ekle', why: 'Satış noktaların saniyede ' + G.fmtRate(ch) + ' telefon satabilir ama sadece ' + G.fmtRate(sup) + ' telefon geliyor. Tezgâh boş kalıyor.' };
     } else if (ch < sup * 0.85) {
-      a = { side: 'c', head: 'Satış noktası aç', why: 'Saniyede ' + G.fmtRate(sup) + ' telefon alıyorsun ama sadece ' + G.fmtRate(ch) + ' telefon satılıyor. Fazlası depoda birikiyor.' };
+      a = { side: 'c', head: 'Satış noktası aç', why: 'Tedarikçilerin saniyede ' + G.fmtRate(sup) + ' telefon alabilir ama sadece ' + G.fmtRate(ch) + ' telefon satılıyor. ' +
+        (depotFull ? 'Depo dolduğu için alış satış hızına düştü; fazla kapasite boşta.' : 'Fazlası depoda birikiyor, dolunca alış durur.') };
     } else {
       a = { side: sup <= ch ? 's' : 'c', head: 'Denge iyi, ikisini birlikte büyüt', why: 'Alış ve satış birbirine yakın. Sıradaki en verimli yatırım:', balanced: true };
     }
-    if (a.side === 'depot') {
-      var d = G.nextDepot();
-      a.rec = d ? { type: 'depot', name: d.name, cost: d.cost } : null;
-      if (!d) { a.side = 'c'; a.head = 'Satış noktası aç'; }
-    }
-    if (a.side !== 'depot') a.rec = G.bestFor(a.side, a.balanced ? 0 : Math.abs(sup - ch));
+    a.rec = G.bestFor(a.side, a.balanced ? 0 : Math.abs(sup - ch));
     if (a.rec && a.rec.cost > S.cash) {
       var pr = Math.max(0, G.flow().profit);
       a.eta = pr > 0 ? (a.rec.cost - S.cash) / pr : null;
     }
+    var d = G.nextDepot();
+    if (depotFull && d && S.cash >= d.cost) a.extra = 'Depo dolu. ' + d.name + ' (' + G.fmt(d.cap) + ' telefon) Parça için sök ve toplu müşteri teklifleri için yer açar; satışı hızlandırmaz.';
     var e = G.nextEra();
     if (e && S.cash >= e.cost) a.extra = e.name + ' çağına geçebilirsin: telefon başı kâr ×' + ((e.sell - e.buy) / (G.era().sell - G.era().buy)).toFixed(1).replace('.', ',') + '.';
     return a;

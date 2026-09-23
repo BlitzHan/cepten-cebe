@@ -185,7 +185,7 @@
       var tooBig = p.phones > G.depotCap(), ok = S.stock >= p.phones;
       h += '<div class="row' + (ok ? ' lit' : '') + '"><div class="row-ico">' + G.icon('sok') + '</div>' +
         '<div class="row-body"><div class="row-name">' + p.name + '</div><div class="row-desc">' + p.desc + '</div>' +
-        '<div class="row-meta"><span>' + f(p.phones) + ' telefon</span><span class="neg">%' + Math.round(p.chance * 100) + ' şans</span><span class="pos">+' + pct(p.gain) + ' kondisyon</span>' +
+        '<div class="row-meta"><span>' + f(p.phones) + ' telefon</span><span class="neg">%' + Math.round(G.partChance(p) * 100) + ' şans</span><span class="pos">+' + pct(p.gain) + ' kondisyon</span>' +
         (tooBig ? '<span class="neg">Depo yetmiyor</span>' : '') + '</div></div>' +
         '<div class="row-count"></div>' +
         '<div class="row-act"><button class="btn yellow" data-act="part" data-id="' + p.id + '"' + (ok ? '' : ' disabled') + '><small>Sök</small><b>' + f(p.phones) + ' telefon</b></button></div></div>';
@@ -197,7 +197,7 @@
   function crewStatus(id) {
     var S = G.S;
     if (id === 'mudur') return 'Alım modu Tedarik ve Satış sekmelerinde, Toplu al/sat tezgâhta.';
-    if (id === 'hakan') { var c = G.combo(); return 'Kombo: ' + c + ' tık' + (G.comboBonus() > 0 ? ' · +' + pct(G.comboBonus()) + ' kondisyon' : ' (5+ tıkla başlar)'); }
+    if (id === 'hakan') return 'Kondisyon +%10, parça sökme şansı +%15.';
     if (id === 'nurten') {
       if (G.offer && G.offer.id === 'nurten') return 'Teklif masada.';
       var w = Math.max(S.nextOffer, S.cd.nurten || 0) - S.t;
@@ -209,7 +209,7 @@
       return cd > 0 ? 'Yeni kampanya: ' + G.fmtTime(cd) : 'Kampanya hazır.';
     }
     if (id === 'selin') return '3 saniyede bir en ucuz satış noktasına personel ekliyor.';
-    if (id === 'deniz') return 'Olumsuz olaylar yarı sürede bitiyor.';
+    if (id === 'deniz') return 'Alışlar %5 ucuz, devretme iadesi %75, olumsuz olaylar yarı sürede.';
     return '';
   }
   function crewHtml() {
@@ -379,7 +379,9 @@
     $('vProfit').textContent = (pr >= 0 ? '+' : '') + tl(pr) + '/sn';
     $('vProfit').className = 'led-sub' + (pr < 0 ? ' neg' : '');
     $('vStock').textContent = f(S.stock);
-    $('vDepot').textContent = S.stock < 1 && fl.sell > 0.05 ? 'Gelen anında satılıyor' : 'Kapasite ' + f(G.depotCap()) + ' · ' + D.DEPOTS[S.depot].name;
+    $('vDepot').textContent = S.stock < 1 && fl.sell > 0.05 ? 'Gelen anında satılıyor'
+      : S.stock >= G.depotCap() - 0.5 ? 'Depo dolu (' + f(G.depotCap()) + ') · satıldıkça alınıyor'
+      : 'Kapasite ' + f(G.depotCap()) + ' · ' + D.DEPOTS[S.depot].name;
     var fill = S.stock / G.depotCap();
     $('barStock').style.transform = 'scaleX(' + Math.min(1, fill).toFixed(4) + ')';
     $('barStock').parentNode.classList.toggle('full', fill > 0.97);
@@ -387,7 +389,7 @@
     $('vGradeLetter').textContent = gr.g;
     $('gradeSticker').dataset.tier = ce >= 1 ? 'top' : ce >= 0.7 ? 'mid' : 'low';
     $('vGrade').textContent = gr.label;
-    $('vCond').textContent = pct(ce) + (G.comboBonus() > 0 ? ' · kombo' : '');
+    $('vCond').textContent = pct(ce) + (S.crew.hakan ? ' · Fatih +%10' : '');
 
     var drawer = G.drawerMode();
     var art = drawer ? 'drawer' : 'e' + S.era;
@@ -402,8 +404,6 @@
     var margin = G.sellPrice() - G.buyPrice();
     $('vMargin').textContent = 'Telefon başı kâr: ' + (margin >= 0 ? '+' : '') + tl(margin);
 
-    var combo = G.combo();
-    $('combo').textContent = S.crew.hakan && combo >= 5 ? 'Kombo ×' + combo + ' · +' + pct(G.comboBonus()) : '';
 
     var sup = G.supTotal(), ch = G.chanTotal(), mx = Math.max(sup, ch, 0.0001);
     var aBuy = fl.buy, aSell = fl.sell;
@@ -487,7 +487,7 @@
     else if (a === 'mode') { if (S.crew.mudur) S.buyMode = b.dataset.v === 'max' ? 'max' : +b.dataset.v; else toast('×10 ve Maks için <b>Mağaza Müdürü</b> gerekir (Ekip sekmesi).', ''); }
     else if (a === 'dispose') {
       var k = b.dataset.k, i = +b.dataset.i, u = unitList(k)[i];
-      modal('Devret: ' + u.name, 'Tüm ' + u.name + ' birimlerini (' + (k === 's' ? S.sup : S.chan)[i] + ' adet) elden çıkarırsın ve harcadığın paranın yarısını, <b>' + tl(G.refundValue(k, i)) + '</b>, geri alırsın.',
+      modal('Devret: ' + u.name, 'Tüm ' + u.name + ' birimlerini (' + (k === 's' ? S.sup : S.chan)[i] + ' adet) elden çıkarırsın ve harcadığın paranın ' + (S.crew.deniz ? '%75\'ini' : 'yarısını') + ', <b>' + tl(G.refundValue(k, i)) + '</b>, geri alırsın.',
         [{ label: 'Vazgeç' }, { label: 'Devret', danger: true, fn: function () { G.disposeUnit(k, i); } }]);
     }
     else if (a === 'retire') {
@@ -528,6 +528,21 @@
 
   function soundIcon() { $('btnSound').innerHTML = G.icon(G.S.sound ? 'ses' : 'sessiz'); }
 
+  // İlk girişte (kayıt yokken) oyunun amacını anlatan kısa pencere. Fişin altından tekrar açılır.
+  function showIntro() {
+    modal('Cepten Cebe\'ye hoş geldin',
+      '<p>Amacın: ucuza telefon alıp pahalıya satarak küçük bir tezgâhtan <b>telefon imparatorluğu</b> kurmak.</p>' +
+      '<ol class="intro-steps">' +
+      '<li><b>AL</b> ile telefon al, <b>SAT</b> ile sat. Aradaki fark kârın.</li>' +
+      '<li>Parayla <b>Tedarik</b> birimleri al: telefonları senin yerine alırlar.</li>' +
+      '<li><b>Satış</b> noktaları aç: elden satıştan AVM\'ye, telefonları senin yerine satarlar.</li>' +
+      '<li>İkisini dengede tut. Tezgâhın altındaki <b>öneri</b> kutusu hangisine yatırım yapman gerektiğini söyler.</li>' +
+      '<li><b>Yükselt</b> ve <b>Ekip</b> ile hızlan, kondisyonu artır, yeni telefon çağına geç.</li>' +
+      '</ol>' +
+      '<p>Bu turda 225 Mr ₺ kazanınca <b>halka arz</b> ile baştan başlar, kalıcı hisse bonusu kazanırsın. Klavyede A al, S sat.</p>',
+      [{ label: 'Kepengi aç', primary: true }]);
+  }
+
   // ---------- kurulum ----------
   function init() {
     $('logo').innerHTML = G.ART.logo;
@@ -540,6 +555,7 @@
           '<div class="offline-sum"><div><span>Satılan telefon</span><b>' + f(r.sold) + '</b></div><div><span>Kasaya giren net</span><b>+' + tl(r.cash) + '</b></div></div>');
       }
     }
+    else if (away === null) showIntro();
     addLog('Kepenk açıldı. Hayırlı işler.', '');
 
     $('btnBuy').addEventListener('click', onBuy);
@@ -555,6 +571,7 @@
     });
     $('btnSound').addEventListener('click', function () { G.S.sound = !G.S.sound; soundIcon(); lastHtml.panel = null; });
     $('modal').addEventListener('click', function (e) { if (e.target.id === 'modal') closeModal(); });
+    $('btnHelp').addEventListener('click', showIntro);
     document.addEventListener('keydown', function (e) {
       if (e.key === 'Escape' && !$('modal').hidden) { closeModal(); return; }
       if (e.repeat || e.target.tagName === 'TEXTAREA' || e.metaKey || e.ctrlKey || !$('modal').hidden) return;

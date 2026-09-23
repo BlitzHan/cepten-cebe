@@ -12,7 +12,9 @@ Hedef adres: `https://blitzhan.github.io/cepten-cebe/`
 >
 > - **Kademe verimi (sonradan):** ilk dengede her kademe bir öncekinden lira başına 4–10 kat verimsizdi; oyuncu hep ilk kademeye takılıyordu. Artık kademe maliyeti `hız × 2,5^kademe / ilk kademe verimi × 2`. Her kademe bir öncekinden ×2,5 verimsiz; bir alt kademeden 6–7 fazla alınca üst kademe öne geçer. Çağ bedelleri ×3.
 >
-> Sonuç: bot yaklaşık 20 dk'da Mahalle Dükkânı'na, 1 saatte AVM'ye, yaklaşık 1,5–1,7 saatte halka arza (öneriyi izleyen bot: Mahalle 16 dk, AVM 44 dk) ulaşıyor. Güncel sayılar her zaman `js/data.js` içinde.
+> - **Ekonomi gözden geçirmesi (sonradan):** tedarik alış çarpanları kademe ilerledikçe düzenli düşüyor (0,95 → 0,35), satış kanalları 0,90 ile 1,50 arasında. Telefoncuya Toptan 75 Bin yerine 38 Bin ₺ ve 0,90 çarpan (önceden kârsızdı). Usta Teknisyen Fatih artık tıklama kombosu değil kalıcı +%10 kondisyon ve +%15 parça sökme şansı veriyor. Avukat Deniz alışları %5 ucuzlatıyor ve devretme iadesini %75'e çıkarıyor. Kural: elle al/sat hiçbir göstergeyi (kâr/sn, bant, kondisyon, öneri) değiştirmez. Bunların hepsi otomasyonun kalıcı akışından, min(tedarik, satış) üzerinden hesaplanır.
+
+Sonuç: bot yaklaşık 20 dk'da Mahalle Dükkânı'na, 1 saatte AVM'ye, yaklaşık 1,5–1,7 saatte halka arza (öneriyi izleyen bot: Mahalle 16 dk, AVM 44 dk) ulaşıyor. Güncel sayılar her zaman `js/data.js` içinde.
 
 ---
 

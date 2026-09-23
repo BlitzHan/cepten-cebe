@@ -36,27 +36,27 @@ G.D = {
 
   // Tedarik: saniyede telefon ALIR. mult = alış fiyatı çarpanı (düşük = ucuz)
   SUPPLIERS: [
-    { id: 'kuzen',    icon: '🧒', name: 'Kuzen Gökhan',        rate: 0.1,   mult: 0.90, cost: 1500,   desc: 'Akrabaların çekmecelerindeki eski telefonları toplar.' },
-    { id: 'ilan',     icon: '🔎', name: 'İlan Avcısı',         rate: 0.5,   mult: 0.95, cost: 38000,  desc: 'İkinci el ilanlarını gece gündüz tarar.' },
-    { id: 'geri',     icon: '🔁', name: 'Geri Alım Tezgâhı',   rate: 2,     mult: 0.85, cost: 380000, desc: 'Müşterinin eskisini alır, yenisine sayar.' },
-    { id: 'toptanci', icon: '📦', name: 'Toptancı Anlaşması',  rate: 8,    mult: 0.90, cost: 3.8e6, desc: 'Koli koli mal, peşin para.' },
-    { id: 'ithalat',  icon: '🚢', name: 'İthalat Hattı',       rate: 35,    mult: 0.80, cost: 4.1e7, desc: 'Konteyner başına telefon. Gümrüğe dikkat.' },
-    { id: 'atolye',   icon: '🔧', name: 'Montaj Atölyesi',     rate: 160,   mult: 0.60, cost: 4.7e8,   desc: 'Parçayı alıp kendin topluyorsun. Maliyet düşüyor.' },
-    { id: 'fabrika',  icon: '🏭', name: 'Fabrika',             rate: 800,  mult: 0.50, cost: 5.9e9,   desc: 'Kendi markan, kendi bandın.' },
-    { id: 'mega',     icon: '🏗️', name: 'Mega Fabrika',        rate: 4000,   mult: 0.40, cost: 7.3e10,   desc: 'Üç vardiya, robot kollar.' },
-    { id: 'yorunge',  icon: '🛰️', name: 'Yörünge Fabrikası',   rate: 22000,   mult: 0.30, cost: 1e12,  desc: 'Sıfır yerçekiminde kusursuz lehim.' }
+    { id: 'kuzen',    icon: '🧒', name: 'Kuzen Gökhan',        rate: 0.1,   mult: 0.95, cost: 1500,   desc: 'Akrabaların çekmecelerindeki eski telefonları toplar.' },
+    { id: 'ilan',     icon: '🔎', name: 'İlan Avcısı',         rate: 0.5,   mult: 0.92, cost: 38000,  desc: 'İkinci el ilanlarını gece gündüz tarar.' },
+    { id: 'geri',     icon: '🔁', name: 'Geri Alım Tezgâhı',   rate: 2,     mult: 0.88, cost: 380000, desc: 'Müşterinin eskisini alır, yenisine sayar.' },
+    { id: 'toptanci', icon: '📦', name: 'Toptancı Anlaşması',  rate: 8,    mult: 0.84, cost: 3.8e6, desc: 'Koli koli mal, peşin para.' },
+    { id: 'ithalat',  icon: '🚢', name: 'İthalat Hattı',       rate: 35,    mult: 0.78, cost: 4.1e7, desc: 'Konteyner başına telefon. Gümrüğe dikkat.' },
+    { id: 'atolye',   icon: '🔧', name: 'Montaj Atölyesi',     rate: 160,   mult: 0.65, cost: 4.7e8,   desc: 'Parçayı alıp kendin topluyorsun. Maliyet düşüyor.' },
+    { id: 'fabrika',  icon: '🏭', name: 'Fabrika',             rate: 800,  mult: 0.55, cost: 5.9e9,   desc: 'Kendi markan, kendi bandın.' },
+    { id: 'mega',     icon: '🏗️', name: 'Mega Fabrika',        rate: 4000,   mult: 0.45, cost: 7.3e10,   desc: 'Üç vardiya, robot kollar.' },
+    { id: 'yorunge',  icon: '🛰️', name: 'Yörünge Fabrikası',   rate: 22000,   mult: 0.35, cost: 1e12,  desc: 'Sıfır yerçekiminde kusursuz lehim.' }
   ],
 
   // Satış kanalları: saniyede telefon SATAR. mult = satış fiyatı çarpanı (yüksek = kârlı)
   CHANNELS: [
     { id: 'elden',     icon: '🤝', name: 'Elden Satış',        rate: 0.1,   mult: 1.10, cost: 1500,   desc: 'WhatsApp durumuna "satılık" yazdın.' },
-    { id: 'telefoncu', icon: '📲', name: 'Telefoncuya Toptan', rate: 1,   mult: 0.85, cost: 75000,  desc: 'Hızlı gider ama pazarlıkta kaybedersin.' },
+    { id: 'telefoncu', icon: '📲', name: 'Telefoncuya Toptan', rate: 1,   mult: 0.90, cost: 38000,  desc: 'Hızlı gider ama pazarlıkta kaybedersin.' },
     { id: 'mahalle',   icon: '🏪', name: 'Mahalle Dükkânı',    rate: 2,     mult: 1.00, cost: 380000, desc: 'Kepenk senin, tabela senin.' },
     { id: 'carsi',     icon: '🛍️', name: 'Çarşı Mağazası',     rate: 8,    mult: 1.05, cost: 3.8e6, desc: 'Ana caddede vitrin.' },
-    { id: 'avm',       icon: '🏬', name: 'AVM Mağazası',       rate: 35,    mult: 1.20, cost: 4.1e7, desc: 'Kira yüksek, müşteri cüzdanı dolu.' },
-    { id: 'online',    icon: '🌐', name: 'Online Mağaza',      rate: 160,   mult: 1.00, cost: 4.7e8, desc: 'Gece 3\'te bile sipariş düşer.' },
+    { id: 'avm',       icon: '🏬', name: 'AVM Mağazası',       rate: 35,    mult: 1.15, cost: 4.1e7, desc: 'Kira yüksek, müşteri cüzdanı dolu.' },
+    { id: 'online',    icon: '🌐', name: 'Online Mağaza',      rate: 160,   mult: 1.08, cost: 4.7e8, desc: 'Gece 3\'te bile sipariş düşer.' },
     { id: 'zincir',    icon: '🏢', name: 'Zincir Marka',       rate: 800,  mult: 1.15, cost: 5.9e9, desc: 'Her ilde bir şube.' },
-    { id: 'ihracat',   icon: '✈️', name: 'İhracat',            rate: 4000,  mult: 0.95, cost: 7.3e10,   desc: 'Kargo uçağı dolusu telefon.' },
+    { id: 'ihracat',   icon: '✈️', name: 'İhracat',            rate: 4000,  mult: 1.10, cost: 7.3e10,   desc: 'Kargo uçağı dolusu telefon.' },
     { id: 'mars',      icon: '🚀', name: 'Mars Bayiliği',      rate: 22000,   mult: 1.50, cost: 1e12,  desc: 'Kızıl gezegende tek yetkili satıcı.' }
   ],
 
@@ -131,11 +131,11 @@ G.D = {
 
   CREW: [
     { id: 'mudur',  icon: '👔', name: 'Mağaza Müdürü',          cost: 230000,  desc: '×10 ve Maks alım; acil durumlar için Toplu Al (%10 pahalı) ve Toplu Sat (%80 fiyat), 2 dk bekleme.' },
-    { id: 'hakan',  icon: '🛠️', name: 'Usta Teknisyen Fatih',   cost: 1.7e6,   desc: 'Hızlı tıklama kombosu kondisyonu geçici artırır (en çok +%25).' },
+    { id: 'hakan',  icon: '🛠️', name: 'Usta Teknisyen Fatih',   cost: 1.7e6,   desc: 'Telefonları elden geçirir: kondisyon kalıcı +%10, Parça için sök şansı +%15.' },
     { id: 'nurten', icon: '🧮', name: 'Muhasebeci Ezgi',        cost: 1.5e7,   desc: '5 dakikada bir %1–10 getirili yatırım teklifi. Kabul edince 30 dk bekler.' },
     { id: 'can',    icon: '📣', name: 'Pazarlamacı Ahmet',      cost: 1.5e8,   desc: '"Kampanya" butonu: 30 sn satış fiyatı ×2. 10 dk bekleme.' },
     { id: 'selin',  icon: '🧑‍💼', name: 'İK\'cı Selin',          cost: 1.5e9,   desc: 'Her 3 saniyede en ucuz satış kanalına bedava personel ekler.' },
-    { id: 'deniz',  icon: '⚖️', name: 'Avukat Deniz',           cost: 1.5e10,   desc: 'Olumsuz olayların süresi yarıya iner.' }
+    { id: 'deniz',  icon: '⚖️', name: 'Avukat Deniz',           cost: 1.5e10,   desc: 'Alışlar %5 ucuz, devretme iadesi %50 yerine %75, olumsuz olaylar yarı sürede biter.' }
   ],
 
   PERKS: [
