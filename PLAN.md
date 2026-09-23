@@ -87,7 +87,7 @@ Birim fiyatı: `temel × 1,15^sahip_olunan` (Cookie Clicker standardı).
 
 | # | Birim | Hız (/sn) | Alış çarpanı | Temel fiyat |
 |---|---|---|---|---|
-| 1 | Kuzen Mert (çekmeceleri toplar) | 0,2 | ×0,90 | 150 ₺ |
+| 1 | Kuzen Gökhan (çekmeceleri toplar) | 0,2 | ×0,90 | 150 ₺ |
 | 2 | İlan Avcısı | 1 | ×0,95 | 1,2 Bin |
 | 3 | Geri Alım Tezgâhı | 5 | ×0,85 | 13 Bin |
 | 4 | Toptancı Anlaşması | 25 | ×0,90 | 140 Bin |
@@ -141,11 +141,11 @@ Herhangi bir birimi toptan elden çıkarırsın, harcadığın paranın %50'si g
 
 | Karakter | Etki |
 |---|---|
-| **Muhasebeci Nurten Abla** | 5 dakikada bir nakitin %1–10'u getirili yatırım teklifi, 30 dk bekleme |
-| **Usta Teknisyen Hakan** | Kombo tıklama kondisyonu geçici artırır |
-| **Mağaza Müdürü** | "Hepsini Al / Hepsini Sat" ve "Maks. birim al" butonları |
+| **Muhasebeci Ezgi** | 5 dakikada bir nakitin %1–10'u getirili yatırım teklifi, 30 dk bekleme |
+| **Usta Teknisyen Fatih** | Kombo tıklama kondisyonu geçici artırır |
+| **Mağaza Müdürü** | "Toplu Al / Toplu Sat" (bedelli, 2 dk bekleme) ve "Maks. birim al" butonları |
 | **İK'cı Selin** | Her 3 sn'de en ucuz satış kanalına bedava personel ekler |
-| **Pazarlamacı Can** | "Kampanya" butonu: 30 sn satış fiyatı ×3, 10 dk bekleme |
+| **Pazarlamacı Ahmet** | "Kampanya" butonu: 30 sn satış fiyatı ×3, 10 dk bekleme |
 | **Avukat** | Olumsuz olayların (gümrük, kur) süresini yarıya indirir |
 
 ---
@@ -173,7 +173,7 @@ Herhangi bir birimi toptan elden çıkarırsın, harcadığın paranın %50'si g
 
 ## 9. Başarımlar (~30 adet, örnekler)
 
-İlk Satış · Esnaf Oldun (ilk dükkân) · "Garantisi var mı abi?" (100 satış) · Kutusu Faturası Yok (hurda notla 1.000 satış) · Milyoner · Milyarder · Çekmeceler Boşaldı (Kuzen Mert'i devret) · AVM Kralı · Fabrikatör · Seri Tıklayıcı (10 sn'de 100 tık) · Kutusunda Sıfır (%100 kondisyon) · Gökyüzü Sınır Değil (Mars Bayiliği) · Borsa Kurdu (ilk halka arz).
+İlk Satış · Esnaf Oldun (ilk dükkân) · "Garantisi var mı abi?" (100 satış) · Kutusu Faturası Yok (hurda notla 1.000 satış) · Milyoner · Milyarder · Çekmeceler Boşaldı (Kuzen Gökhan'ı devret) · AVM Kralı · Fabrikatör · Seri Tıklayıcı (10 sn'de 100 tık) · Kutusunda Sıfır (%100 kondisyon) · Gökyüzü Sınır Değil (Mars Bayiliği) · Borsa Kurdu (ilk halka arz).
 
 ---
 
@@ -185,7 +185,7 @@ Dr. Meth düzeninin modern hali:
 ┌──────────────────────────┬────────────────────────────┐
 │  ₺ 12,4 Bin   📱 38/50   │  İMPARATORLUĞUN            │
 │  ⭐ B · İyi (%72)        │  [Mahalle Dükkânı ×3] ▦▦▦  │
-│                          │  [Kuzen Mert ×12]          │
+│                          │  [Kuzen Gökhan ×12]          │
 │    ┌──────┐  ┌──────┐    │  [İlan Avcısı ×4]          │
 │    │ 📱AL │  │ ₺SAT │    │                            │
 │    └──────┘  └──────┘    │  alış ▓▓▓▓▓░░ 8,4/sn       │

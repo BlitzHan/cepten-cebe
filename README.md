@@ -10,7 +10,7 @@ Tarayıcıda oynanan bir idle/clicker oyunu. Tuşlu telefonla elden satışa ba�
 - **Tedarik** sekmesindeki birimler saniyede telefon alır, **Satış** sekmesindekiler satar. İkisini dengede tut: depo dolarsa alım durur, stok biterse satış kanalları boşta kalır.
 - **Şimdi ne yapmalı?** AL/SAT'ın altındaki tabela, darboğazın tedarikte mi satışta mı olduğunu söyler ve o an en verimli yatırımı gösterir. Tek tıkla alınır.
 - **Kondisyon** satış fiyatını çarpar. "Parça için sök" yükseltmeleri stoktaki telefonlarla ödenir ve şansa bağlıdır.
-- **Tecrübeye çevir**: bir tedarik ya da satış türünden yeterince birimin olunca (Kuzen Mert için 50) o kadarını kapatırsın, para iadesi olmaz, kalıcı kondisyon kazanırsın. Her tür için turda bir kez. Başta işe yarayan birimler oyunun ortasında böylece kaliteye dönüşür (Dr. Meth'teki işçi feda etme).
+- **Tecrübeye çevir**: bir tedarik ya da satış türünden yeterince birimin olunca (Kuzen Gökhan için 50) o kadarını kapatırsın, para iadesi olmaz, kalıcı kondisyon kazanırsın. Her tür için turda bir kez. Başta işe yarayan birimler oyunun ortasında böylece kaliteye dönüşür (Dr. Meth'teki işçi feda etme).
 - **Çağ atla**: tuşlu → kapaklı → dokunmatik → akıllı → amiral gemisi → katlanır.
 - **Ekip**: Mağaza Müdürü, Usta Teknisyen, Muhasebeci, Pazarlamacı, İK'cı ve Avukat oyuna yeni mekanikler ekler.
 - **Halka arz**: yeterince kazanınca her şeyi sıfırlayıp kalıcı bonus veren hisse alırsın.

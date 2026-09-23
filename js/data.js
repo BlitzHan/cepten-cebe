@@ -36,7 +36,7 @@ G.D = {
 
   // Tedarik: saniyede telefon ALIR. mult = alış fiyatı çarpanı (düşük = ucuz)
   SUPPLIERS: [
-    { id: 'kuzen',    icon: '🧒', name: 'Kuzen Mert',          rate: 0.1,   mult: 0.90, cost: 1500,   desc: 'Akrabaların çekmecelerindeki eski telefonları toplar.' },
+    { id: 'kuzen',    icon: '🧒', name: 'Kuzen Gökhan',        rate: 0.1,   mult: 0.90, cost: 1500,   desc: 'Akrabaların çekmecelerindeki eski telefonları toplar.' },
     { id: 'ilan',     icon: '🔎', name: 'İlan Avcısı',         rate: 0.5,   mult: 0.95, cost: 26000,  desc: 'İkinci el ilanlarını gece gündüz tarar.' },
     { id: 'geri',     icon: '🔁', name: 'Geri Alım Tezgâhı',   rate: 2,     mult: 0.85, cost: 380000, desc: 'Müşterinin eskisini alır, yenisine sayar.' },
     { id: 'toptanci', icon: '📦', name: 'Toptancı Anlaşması',  rate: 8,    mult: 0.90, cost: 1.4e7, desc: 'Koli koli mal, peşin para.' },
@@ -130,10 +130,10 @@ G.D = {
   ],
 
   CREW: [
-    { id: 'mudur',  icon: '👔', name: 'Mağaza Müdürü',          cost: 230000,  desc: '×10 ve Maks alım, "Hepsini Al" ve "Hepsini Sat" butonları.' },
-    { id: 'hakan',  icon: '🛠️', name: 'Usta Teknisyen Hakan',   cost: 1.7e6,   desc: 'Hızlı tıklama kombosu kondisyonu geçici artırır (en çok +%25).' },
-    { id: 'nurten', icon: '🧮', name: 'Muhasebeci Nurten Abla', cost: 1.5e7,   desc: '5 dakikada bir %1–10 getirili yatırım teklifi. Kabul edince 30 dk bekler.' },
-    { id: 'can',    icon: '📣', name: 'Pazarlamacı Can',        cost: 1.5e8,   desc: '"Kampanya" butonu: 30 sn satış fiyatı ×2. 10 dk bekleme.' },
+    { id: 'mudur',  icon: '👔', name: 'Mağaza Müdürü',          cost: 230000,  desc: '×10 ve Maks alım; acil durumlar için Toplu Al (%10 pahalı) ve Toplu Sat (%80 fiyat), 2 dk bekleme.' },
+    { id: 'hakan',  icon: '🛠️', name: 'Usta Teknisyen Fatih',   cost: 1.7e6,   desc: 'Hızlı tıklama kombosu kondisyonu geçici artırır (en çok +%25).' },
+    { id: 'nurten', icon: '🧮', name: 'Muhasebeci Ezgi',        cost: 1.5e7,   desc: '5 dakikada bir %1–10 getirili yatırım teklifi. Kabul edince 30 dk bekler.' },
+    { id: 'can',    icon: '📣', name: 'Pazarlamacı Ahmet',      cost: 1.5e8,   desc: '"Kampanya" butonu: 30 sn satış fiyatı ×2. 10 dk bekleme.' },
     { id: 'selin',  icon: '🧑‍💼', name: 'İK\'cı Selin',          cost: 1.5e9,   desc: 'Her 3 saniyede en ucuz satış kanalına bedava personel ekler.' },
     { id: 'deniz',  icon: '⚖️', name: 'Avukat Deniz',           cost: 1.5e10,   desc: 'Olumsuz olayların süresi yarıya iner.' }
   ],

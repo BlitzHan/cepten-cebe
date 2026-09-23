@@ -196,7 +196,7 @@
 
   function crewStatus(id) {
     var S = G.S;
-    if (id === 'mudur') return 'Alım modu Tedarik ve Satış sekmelerinde, Hepsini Al/Sat tezgâhta.';
+    if (id === 'mudur') return 'Alım modu Tedarik ve Satış sekmelerinde, Toplu al/sat tezgâhta.';
     if (id === 'hakan') { var c = G.combo(); return 'Kombo: ' + c + ' tık' + (G.comboBonus() > 0 ? ' · +' + pct(G.comboBonus()) + ' kondisyon' : ' (5+ tıkla başlar)'); }
     if (id === 'nurten') {
       if (G.offer && G.offer.id === 'nurten') return 'Teklif masada.';
@@ -406,7 +406,11 @@
     $('vSellRate').textContent = fr(ch) + ' tel/sn';
 
     var q = '';
-    if (S.crew.mudur) q += '<button class="btn blue inline" data-act="buyAll">Hepsini al</button><button class="btn red inline" data-act="sellAll">Hepsini sat</button>';
+    if (S.crew.mudur) {
+      var bl = G.bulkLeft(), wait = bl > 0 ? ' disabled' : '';
+      q += '<button class="btn blue inline" data-act="buyAll"' + wait + ' title="Depoyu %10 pahalıya doldurur. Sonra 2 dk bekler.">' + (bl > 0 ? 'Toplu al ' + G.fmtTime(bl) : 'Toplu al +%10') + '</button>' +
+        '<button class="btn red inline" data-act="sellAll"' + wait + ' title="Tüm stoğu toptancıya %80 fiyatla satar. Sonra 2 dk bekler.">' + (bl > 0 ? 'Toplu sat ' + G.fmtTime(bl) : 'Toplu sat %80') + '</button>';
+    }
     if (S.crew.can) {
       var cd = (S.cd.kampanya || 0) - S.t;
       q += '<button class="btn yellow inline" data-act="campaign"' + (cd > 0 ? ' disabled' : '') + '>' +

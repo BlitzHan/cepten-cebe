@@ -216,18 +216,25 @@
     earn(rev, n);
     return { n: n, rev: rev };
   };
+  // Toplu al/sat: tıklama gücünü aşan acil durum araçları; bedeli var ve 2 dk bekler.
+  G.BULK = { buyMarkup: 1.1, sellDiscount: 0.8, cooldown: 120 };
+  G.bulkLeft = function () { return Math.max(0, (G.S.cd.bulk || 0) - G.S.t); };
   G.buyAll = function () {
-    var bp = G.buyPrice();
+    if (G.bulkLeft() > 0) return 0;
+    var bp = G.buyPrice() * G.BULK.buyMarkup;
     var n = Math.min(Math.floor(G.S.cash / bp), Math.floor(G.space()));
     if (n <= 0) return 0;
     G.S.cash -= n * bp; G.S.stock += n; G.S.stats.bought += n; G.S.stats.spent += n * bp;
+    G.S.cd.bulk = G.S.t + G.BULK.cooldown;
     return n;
   };
   G.sellAll = function () {
+    if (G.bulkLeft() > 0) return 0;
     var n = Math.floor(G.S.stock);
     if (n <= 0) return 0;
-    var rev = n * G.sellPrice();
+    var rev = n * G.sellPrice() * G.BULK.sellDiscount;
     G.S.stock -= n; earn(rev, n);
+    G.S.cd.bulk = G.S.t + G.BULK.cooldown;
     return rev;
   };
   function earn(rev, n) {
@@ -447,7 +454,7 @@
       var v = G.S.cash * o.pct / 100;
       G.S.cash += v; G.S.stats.earned += v; G.S.stats.earnedAll += v;
       G.S.cd.nurten = G.S.t + 1800; G.S.nextOffer = G.S.t + 1800;
-      G.emit('log', { text: 'Nurten Abla\'nın yatırımı tuttu: +' + G.fmt(v) + ' ₺', tone: 'good' });
+      G.emit('log', { text: 'Ezgi\'nin yatırımı tuttu: +' + G.fmt(v) + ' ₺', tone: 'good' });
     }
     G.emit('offerDone', o);
     return true;
@@ -476,7 +483,7 @@
     { id: 'sifir',    icon: '✨', name: 'Kutusunda Sıfır',          desc: 'Kondisyonu %100\'e çıkar.',              ok: function (S) { return S.cond >= 1 - 1e-9; } },
     { id: 'koleksiyon',icon: '🏆', name: 'Koleksiyonluk',           desc: 'Kondisyonu %150\'ye çıkar.',             ok: function (S) { return S.cond >= 1.5 - 1e-9; } },
     { id: 'kumar',    icon: '🎲', name: 'Elimde Kaldı',            desc: '5 kez "Parça için sök" başarısız olsun.', ok: function (S) { return S.stats.fails >= 5; } },
-    { id: 'cekmece',  icon: '🗄️', name: 'Çekmeceler Boşaldı',      desc: 'Kuzen Mert\'i devret.',                  ok: function (S) { return S.stats.disposed.kuzen > 0; } },
+    { id: 'cekmece',  icon: '🗄️', name: 'Çekmeceler Boşaldı',      desc: 'Kuzen Gökhan\'ı devret.',                ok: function (S) { return S.stats.disposed.kuzen > 0; } },
     { id: 'tecrube',  icon: '🎖️', name: 'Eski Kurt',               desc: '5 birim türünü tecrübeye çevir.',         ok: function (S) { return Object.keys(S.retired).length >= 5; } },
     { id: 'tik',      icon: '👆', name: 'Tık Tık',                 desc: '1.000 kez tıkla.',                       ok: function (S) { return S.stats.clicks >= 1000; } },
     { id: 'parmak',   icon: '💪', name: 'Parmak Kası',             desc: '10.000 kez tıkla.',                      ok: function (S) { return S.stats.clicks >= 1e4; } },
@@ -560,7 +567,7 @@
     }
     if (S.crew.nurten && !G.offer && S.t >= S.nextOffer && (S.cd.nurten || 0) <= S.t) {
       var pct = 1 + Math.floor(Math.random() * 10);
-      G.offer = { id: 'nurten', until: S.t + 30, dur: 30, pct: pct, title: 'Nurten Abla\'nın teklifi',
+      G.offer = { id: 'nurten', until: S.t + 30, dur: 30, pct: pct, title: 'Muhasebeci Ezgi\'nin teklifi',
         text: 'Kasadaki paranın %' + pct + '\'i kadar getiri garanti. Kabul edersen 30 dk yeni teklif yok.', btn: 'Kabul' };
       S.nextOffer = S.t + 300;
       G.emit('offer', G.offer);
