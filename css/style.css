@@ -160,6 +160,9 @@ button:disabled { cursor: not-allowed; }
 .grade-sticker[data-tier="mid"] { background: var(--yellow); }
 .grade-sticker[data-tier="top"] { background: var(--red); color: #fff; }
 .grade-name { display: block; font-size: 18px; font-weight: 800; line-height: 1.1; font-variation-settings: 'wdth' 75; }
+/* Tek kelimelik uzun notlar (Koleksiyonluk) kırılamaz: daha dar ve küçük yazılır */
+.grade-name.long { font-size: 15px; font-variation-settings: 'wdth' 62; }
+.grade-plate > div:last-child { min-width: 0; }
 
 /* ---------- AL / SAT ışıklı kutular ---------- */
 .stage { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 10px; }

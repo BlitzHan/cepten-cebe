@@ -397,6 +397,7 @@
     $('vGradeLetter').textContent = gr.g;
     $('gradeSticker').dataset.tier = ce >= 1 ? 'top' : ce >= 0.7 ? 'mid' : 'low';
     $('vGrade').textContent = gr.label;
+    $('vGrade').classList.toggle('long', gr.label.indexOf(' ') < 0 && gr.label.length > 10);
     $('vCond').textContent = pct(ce) + (S.crew.hakan ? ' · Fatih +%10' : '');
 
     var drawer = G.drawerMode();
