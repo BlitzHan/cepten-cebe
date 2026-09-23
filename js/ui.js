@@ -358,12 +358,18 @@
     ['kur', 'Kur şoku', ''], ['gumruk', 'Gümrük', 'bad']
   ];
 
-  function setTrack(el, rate, max) {
-    el.style.width = (rate / max * 100) + '%';
-    var track = el.parentNode;
-    track.classList.toggle('idle', rate <= 0);
-    var dur = rate > 0 ? Math.max(0.12, Math.min(2.5, 2.5 / Math.log10(rate + 10))) : 1;
-    el.style.animationDuration = dur.toFixed(2) + 's';
+  // Bant: soluk katman kapasite, akan katman gerçekleşen akış.
+  function setTrack(bar, cap, capacity, actual, max) {
+    cap.style.width = (capacity / max * 100) + '%';
+    bar.style.width = (Math.min(actual, capacity) / max * 100) + '%';
+    bar.parentNode.classList.toggle('idle', actual <= 0.01);
+    var dur = actual > 0 ? Math.max(0.12, Math.min(2.5, 2.5 / Math.log10(actual + 10))) : 1;
+    bar.style.animationDuration = dur.toFixed(2) + 's';
+  }
+  function rateText(actual, capacity) {
+    var t = fr(actual) + ' tel/sn';
+    if (capacity > 0 && actual < capacity * 0.9) t += '<small>kapasite ' + fr(capacity) + '</small>';
+    return t;
   }
 
   function render() {
@@ -373,7 +379,7 @@
     $('vProfit').textContent = (pr >= 0 ? '+' : '') + tl(pr) + '/sn';
     $('vProfit').className = 'led-sub' + (pr < 0 ? ' neg' : '');
     $('vStock').textContent = f(S.stock);
-    $('vDepot').textContent = 'Kapasite ' + f(G.depotCap()) + ' · ' + D.DEPOTS[S.depot].name;
+    $('vDepot').textContent = S.stock < 1 && G.rt.sell > 0.05 ? 'Gelen anında satılıyor' : 'Kapasite ' + f(G.depotCap()) + ' · ' + D.DEPOTS[S.depot].name;
     var fill = S.stock / G.depotCap();
     $('barStock').style.transform = 'scaleX(' + Math.min(1, fill).toFixed(4) + ')';
     $('barStock').parentNode.classList.toggle('full', fill > 0.97);
@@ -400,10 +406,11 @@
     $('combo').textContent = S.crew.hakan && combo >= 5 ? 'Kombo ×' + combo + ' · +' + pct(G.comboBonus()) : '';
 
     var sup = G.supTotal(), ch = G.chanTotal(), mx = Math.max(sup, ch, 0.0001);
-    setTrack($('barBuy'), sup, mx);
-    setTrack($('barSell'), ch, mx);
-    $('vBuyRate').textContent = fr(sup) + ' tel/sn';
-    $('vSellRate').textContent = fr(ch) + ' tel/sn';
+    var aBuy = Math.max(0, G.rt.buy), aSell = Math.max(0, G.rt.sell);
+    setTrack($('barBuy'), $('capBuy'), sup, aBuy, mx);
+    setTrack($('barSell'), $('capSell'), ch, aSell, mx);
+    setHtml($('vBuyRate'), 'vBuyRate', rateText(aBuy, sup));
+    setHtml($('vSellRate'), 'vSellRate', rateText(aSell, ch));
 
     var q = '';
     if (S.crew.mudur) {

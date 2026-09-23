@@ -14,6 +14,11 @@ vm.runInThisContext(fs.readFileSync(path.join(root, 'data.js'), 'utf8'));
   D.DEPOTS.forEach(function (x) { x.cost *= k('UP'); });
   D.CREW.forEach(function (x) { x.cost *= k('UP'); });
   if (e.IPO) D.IPO_MIN = +e.IPO;
+  // DECAY: kademe başına verim kaybı. Maliyeti hızdan yeniden hesaplar (ilk kademe sabit kalır).
+  if (e.DECAY) [D.SUPPLIERS, D.CHANNELS].forEach(function (L) {
+    var e0 = L[0].rate / L[0].cost;
+    L.forEach(function (u, i) { if (i) u.cost = u.rate * Math.pow(+e.DECAY, i) / e0 * k('HIGHK'); });
+  });
 })(globalThis.G.D, process.env);
 vm.runInThisContext(fs.readFileSync(path.join(root, 'engine.js'), 'utf8'));
 var G = globalThis.G, D = G.D;

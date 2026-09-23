@@ -16,11 +16,11 @@ G.D = {
   // Telefon çağları: alış/satış temel fiyatı. cost = çağ atlama bedeli (nakit)
   ERAS: [
     { id: 'tuslu',      name: 'Tuşlu Telefon',     buy: 750,    sell: 1000,    cost: 0 },
-    { id: 'kapakli',    name: 'Kapaklı Telefon',   buy: 2000,    sell: 2600,    cost: 7.5e5 },
-    { id: 'dokunmatik', name: 'İlk Dokunmatik',    buy: 5000,   sell: 6500,   cost: 2.25e8 },
-    { id: 'akilli',     name: 'Akıllı Telefon',    buy: 18000,  sell: 23500,  cost: 6.8e10 },
-    { id: 'amiral',     name: 'Amiral Gemisi',     buy: 65000,  sell: 85000,  cost: 2e13 },
-    { id: 'katlanir',   name: 'Katlanır Telefon',  buy: 110000, sell: 145000, cost: 6.1e15 }
+    { id: 'kapakli',    name: 'Kapaklı Telefon',   buy: 2000,    sell: 2600,    cost: 2.2e6 },
+    { id: 'dokunmatik', name: 'İlk Dokunmatik',    buy: 5000,   sell: 6500,   cost: 6.8e8 },
+    { id: 'akilli',     name: 'Akıllı Telefon',    buy: 18000,  sell: 23500,  cost: 2e11 },
+    { id: 'amiral',     name: 'Amiral Gemisi',     buy: 65000,  sell: 85000,  cost: 6e13 },
+    { id: 'katlanir',   name: 'Katlanır Telefon',  buy: 110000, sell: 145000, cost: 1.8e16 }
   ],
 
   GRADES: [
@@ -37,27 +37,27 @@ G.D = {
   // Tedarik: saniyede telefon ALIR. mult = alış fiyatı çarpanı (düşük = ucuz)
   SUPPLIERS: [
     { id: 'kuzen',    icon: '🧒', name: 'Kuzen Gökhan',        rate: 0.1,   mult: 0.90, cost: 1500,   desc: 'Akrabaların çekmecelerindeki eski telefonları toplar.' },
-    { id: 'ilan',     icon: '🔎', name: 'İlan Avcısı',         rate: 0.5,   mult: 0.95, cost: 26000,  desc: 'İkinci el ilanlarını gece gündüz tarar.' },
+    { id: 'ilan',     icon: '🔎', name: 'İlan Avcısı',         rate: 0.5,   mult: 0.95, cost: 38000,  desc: 'İkinci el ilanlarını gece gündüz tarar.' },
     { id: 'geri',     icon: '🔁', name: 'Geri Alım Tezgâhı',   rate: 2,     mult: 0.85, cost: 380000, desc: 'Müşterinin eskisini alır, yenisine sayar.' },
-    { id: 'toptanci', icon: '📦', name: 'Toptancı Anlaşması',  rate: 8,    mult: 0.90, cost: 1.4e7, desc: 'Koli koli mal, peşin para.' },
-    { id: 'ithalat',  icon: '🚢', name: 'İthalat Hattı',       rate: 35,    mult: 0.80, cost: 2.9e8, desc: 'Konteyner başına telefon. Gümrüğe dikkat.' },
-    { id: 'atolye',   icon: '🔧', name: 'Montaj Atölyesi',     rate: 160,   mult: 0.60, cost: 8.2e9,   desc: 'Parçayı alıp kendin topluyorsun. Maliyet düşüyor.' },
-    { id: 'fabrika',  icon: '🏭', name: 'Fabrika',             rate: 800,  mult: 0.50, cost: 2.8e11,   desc: 'Kendi markan, kendi bandın.' },
-    { id: 'mega',     icon: '🏗️', name: 'Mega Fabrika',        rate: 4000,   mult: 0.40, cost: 9.8e12,   desc: 'Üç vardiya, robot kollar.' },
-    { id: 'yorunge',  icon: '🛰️', name: 'Yörünge Fabrikası',   rate: 22000,   mult: 0.30, cost: 3.8e14,  desc: 'Sıfır yerçekiminde kusursuz lehim.' }
+    { id: 'toptanci', icon: '📦', name: 'Toptancı Anlaşması',  rate: 8,    mult: 0.90, cost: 3.8e6, desc: 'Koli koli mal, peşin para.' },
+    { id: 'ithalat',  icon: '🚢', name: 'İthalat Hattı',       rate: 35,    mult: 0.80, cost: 4.1e7, desc: 'Konteyner başına telefon. Gümrüğe dikkat.' },
+    { id: 'atolye',   icon: '🔧', name: 'Montaj Atölyesi',     rate: 160,   mult: 0.60, cost: 4.7e8,   desc: 'Parçayı alıp kendin topluyorsun. Maliyet düşüyor.' },
+    { id: 'fabrika',  icon: '🏭', name: 'Fabrika',             rate: 800,  mult: 0.50, cost: 5.9e9,   desc: 'Kendi markan, kendi bandın.' },
+    { id: 'mega',     icon: '🏗️', name: 'Mega Fabrika',        rate: 4000,   mult: 0.40, cost: 7.3e10,   desc: 'Üç vardiya, robot kollar.' },
+    { id: 'yorunge',  icon: '🛰️', name: 'Yörünge Fabrikası',   rate: 22000,   mult: 0.30, cost: 1e12,  desc: 'Sıfır yerçekiminde kusursuz lehim.' }
   ],
 
   // Satış kanalları: saniyede telefon SATAR. mult = satış fiyatı çarpanı (yüksek = kârlı)
   CHANNELS: [
     { id: 'elden',     icon: '🤝', name: 'Elden Satış',        rate: 0.1,   mult: 1.10, cost: 1500,   desc: 'WhatsApp durumuna "satılık" yazdın.' },
-    { id: 'telefoncu', icon: '📲', name: 'Telefoncuya Toptan', rate: 1,   mult: 0.85, cost: 22000,  desc: 'Hızlı gider ama pazarlıkta kaybedersin.' },
-    { id: 'mahalle',   icon: '🏪', name: 'Mahalle Dükkânı',    rate: 2,     mult: 1.00, cost: 260000, desc: 'Kepenk senin, tabela senin.' },
-    { id: 'carsi',     icon: '🛍️', name: 'Çarşı Mağazası',     rate: 8,    mult: 1.05, cost: 1.1e7, desc: 'Ana caddede vitrin.' },
-    { id: 'avm',       icon: '🏬', name: 'AVM Mağazası',       rate: 35,    mult: 1.20, cost: 2.9e8, desc: 'Kira yüksek, müşteri cüzdanı dolu.' },
-    { id: 'online',    icon: '🌐', name: 'Online Mağaza',      rate: 160,   mult: 1.00, cost: 7.4e9, desc: 'Gece 3\'te bile sipariş düşer.' },
-    { id: 'zincir',    icon: '🏢', name: 'Zincir Marka',       rate: 800,  mult: 1.15, cost: 2.5e11, desc: 'Her ilde bir şube.' },
-    { id: 'ihracat',   icon: '✈️', name: 'İhracat',            rate: 4000,  mult: 0.95, cost: 8.2e12,   desc: 'Kargo uçağı dolusu telefon.' },
-    { id: 'mars',      icon: '🚀', name: 'Mars Bayiliği',      rate: 22000,   mult: 1.50, cost: 3.5e14,  desc: 'Kızıl gezegende tek yetkili satıcı.' }
+    { id: 'telefoncu', icon: '📲', name: 'Telefoncuya Toptan', rate: 1,   mult: 0.85, cost: 75000,  desc: 'Hızlı gider ama pazarlıkta kaybedersin.' },
+    { id: 'mahalle',   icon: '🏪', name: 'Mahalle Dükkânı',    rate: 2,     mult: 1.00, cost: 380000, desc: 'Kepenk senin, tabela senin.' },
+    { id: 'carsi',     icon: '🛍️', name: 'Çarşı Mağazası',     rate: 8,    mult: 1.05, cost: 3.8e6, desc: 'Ana caddede vitrin.' },
+    { id: 'avm',       icon: '🏬', name: 'AVM Mağazası',       rate: 35,    mult: 1.20, cost: 4.1e7, desc: 'Kira yüksek, müşteri cüzdanı dolu.' },
+    { id: 'online',    icon: '🌐', name: 'Online Mağaza',      rate: 160,   mult: 1.00, cost: 4.7e8, desc: 'Gece 3\'te bile sipariş düşer.' },
+    { id: 'zincir',    icon: '🏢', name: 'Zincir Marka',       rate: 800,  mult: 1.15, cost: 5.9e9, desc: 'Her ilde bir şube.' },
+    { id: 'ihracat',   icon: '✈️', name: 'İhracat',            rate: 4000,  mult: 0.95, cost: 7.3e10,   desc: 'Kargo uçağı dolusu telefon.' },
+    { id: 'mars',      icon: '🚀', name: 'Mars Bayiliği',      rate: 22000,   mult: 1.50, cost: 1e12,  desc: 'Kızıl gezegende tek yetkili satıcı.' }
   ],
 
   // Tecrübeye çevir (Dr. Meth'teki işçi feda etme): o türden `need` birim kapatılır,

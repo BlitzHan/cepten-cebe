@@ -10,7 +10,9 @@ Hedef adres: `https://blitzhan.github.io/cepten-cebe/`
 >
 > - **Gerçekçi fiyatlar (sonradan):** tüm para değerleri ×7,5 büyütüldü. Çağ alış/satış fiyatları: tuşlu 750/1.000, kapaklı 2.000/2.600, dokunmatik 5.000/6.500, akıllı 18.000/23.500, amiral gemisi 65.000/85.000, katlanır 110.000/145.000 ₺. Başlangıç nakiti 7.500 ₺, halka arz eşiği 225 Mr ₺. Eski kayıtlar otomatik dönüştürülür (kayıt sürümü 2).
 >
-> Sonuç: bot yaklaşık 20 dk'da Mahalle Dükkânı'na, 1 saatte AVM'ye, yaklaşık 1,7 saatte halka arza ulaşıyor. Güncel sayılar her zaman `js/data.js` içinde.
+> - **Kademe verimi (sonradan):** ilk dengede her kademe bir öncekinden lira başına 4–10 kat verimsizdi; oyuncu hep ilk kademeye takılıyordu. Artık kademe maliyeti `hız × 2,5^kademe / ilk kademe verimi × 2`. Her kademe bir öncekinden ×2,5 verimsiz; bir alt kademeden 6–7 fazla alınca üst kademe öne geçer. Çağ bedelleri ×3.
+>
+> Sonuç: bot yaklaşık 20 dk'da Mahalle Dükkânı'na, 1 saatte AVM'ye, yaklaşık 1,5–1,7 saatte halka arza (öneriyi izleyen bot: Mahalle 16 dk, AVM 44 dk) ulaşıyor. Güncel sayılar her zaman `js/data.js` içinde.
 
 ---
 
