@@ -363,10 +363,13 @@
     var buy = sup;
     if (depotFull || (cashShort && sup > ch)) buy = Math.min(sup, ch);  // satıldıkça alır
     var sell = backlog ? ch : Math.min(ch, buy);
-    // kâr: ucuz tedarikçi önce çalışır, pahalı kanal önce satar
-    var bp = G.buyPrice(), sp = G.sellPrice(), left = buy, cost = 0, rev = 0;
+    // Kâr, otomasyonun kalıcı kazancıdır: alınan kadar satılır (min(tedarik, satış)).
+    // Stok, kasa ve tıklama serisi (Fatih bonusu) hesaba girmez; elle al/sat bu sayıyı oynatmaz.
+    var n0 = Math.min(sup, ch);
+    var bp = G.buyPrice(), sp = G.sellPrice() * (0.5 + S.cond) / (0.5 + G.condEff());
+    var left = n0, cost = 0, rev = 0;
     supOrder.forEach(function (i) { var n = Math.min(left, G.supRate(i)); cost += n * bp * D.SUPPLIERS[i].mult; left -= n; });
-    left = sell;
+    left = n0;
     chanOrder.forEach(function (j) { var n = Math.min(left, G.chanRate(j)); rev += n * sp * D.CHANNELS[j].mult; left -= n; });
     return { buy: buy, sell: sell, profit: rev - cost };
   };
