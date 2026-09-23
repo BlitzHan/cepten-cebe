@@ -75,12 +75,12 @@ FINISH: unreviewed and undocumented is unfinished; this build ends with the fini
         </button>
       </div>
       <div class="under-stage"><span id="vMargin"></span><span id="combo" class="combo"></span></div>
+      <div id="advice" class="advice" aria-live="polite"></div>
       <div id="quick" class="quick"></div>
 
       <div class="belt">
-        <div class="belt-row"><span>Alış</span><div class="track buy"><i id="barBuy"></i></div><b id="vBuyRate">0</b></div>
-        <div class="belt-row"><span>Satış</span><div class="track sell"><i id="barSell"></i></div><b id="vSellRate">0</b></div>
-        <p id="flowMsg" class="flowmsg"></p>
+        <div class="belt-row" id="laneBuy"><span>Alış</span><div class="track buy"><i id="barBuy"></i></div><b id="vBuyRate">0</b></div>
+        <div class="belt-row" id="laneSell"><span>Satış</span><div class="track sell"><i id="barSell"></i></div><b id="vSellRate">0</b></div>
         <div id="buffs" class="buffs"></div>
       </div>
     </section>

@@ -36,6 +36,8 @@ Tek aile: **Archivo** (değişken, `wdth` 62–125).
 - **Çıkartma (`.sticker`):** başarımlar, yuvarlak, hafif eğik.
 - **Fiş (`.receipt`):** olay günlüğü, yırtık alt kenar.
 - **Olay çıkartması:** sarı, hafif eğik, üstten yapışarak gelir.
+- **Şimdi tabelası (`.advice`):** AL/SAT'ın hemen altında. Başlık şeridi darboğaz tarafının renginde (lacivert tedarik, kırmızı satış), yanında sarı "Şimdi" etiketi. Altında tek cümle neden ve tek tıkla alınabilen öneri kartı. Karar `G.advice()` içinde: alış/satış hızı, depo ve kasa karşılaştırılır, o taraftaki lira başına en çok telefon/sn getiren birim ya da yükseltme seçilir.
+- **Öneri işaretleri:** önerinin olduğu sekme sarı ve altı oklu; önerilen satırda sarı çerçeve ve "Şimdi en iyi yatırım" etiketi; zayıf şeritte kırmızı "Darboğaz" etiketi. Sarı noktalar yalnızca "burada alınabilecek bir şey var" anlamında kalır.
 - **Tezgâh bandı:** alış (lacivert) ve satış (kırmızı) şeritleri; hızla orantılı akan çizgiler.
 
 ## Hareket

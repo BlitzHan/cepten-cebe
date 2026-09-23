@@ -52,6 +52,18 @@ while (simT < HOURS * 3600) {
     D.SUPPLIERS.forEach(function (u, i) { if (G.retireInfo('s', i).ready && G.supRate(i) < G.supTotal() * 0.03) { G.retire('s', i); mark('Tecrübe: ' + u.name); } });
     D.CHANNELS.forEach(function (u, i) { if (G.retireInfo('c', i).ready && G.chanRate(i) < G.chanTotal() * 0.03) { G.retire('c', i); mark('Tecrübe: ' + u.name); } });
   }
+  if (process.env.ADVICE) {
+    // Sadece oyunun önerisini takip et (+ çağ/depo/parça/ekip yukarıda)
+    for (var g2 = 0; g2 < 50; g2++) {
+      var a = G.advice(), r = a.rec;
+      if (!r || r.cost > S.cash) break;
+      if (r.type === 'unit') { S[r.kind === 's' ? 'sup' : 'chan'][r.i]++; S.cash -= r.cost; }
+      else if (r.type === 'upg') G.buyUpgrade(r.id);
+      else if (r.type === 'depot') G.buyDepot();
+    }
+    // tıklama yükseltmeleri önerinin dışında kalır; ucuzsa al
+    G.upgradesAvailable().forEach(function (u) { if (/^click/.test(u.id) && u.cost < S.cash * 0.2) G.buyUpgrade(u.id); });
+  } else
   for (var guard = 0; guard < 50; guard++) {
     var ups = G.upgradesAvailable();
     var bs = best(D.SUPPLIERS.length, sScore), bc = best(D.CHANNELS.length, cScore);

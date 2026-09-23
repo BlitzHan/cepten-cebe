@@ -114,7 +114,9 @@
       var ri = G.retireInfo(kind, i);
       var good = isS ? u.mult < 1 : u.mult >= 1;
       var lit = cost <= S.cash || ri.ready;
-      h += '<div class="row' + (lit ? ' lit' : '') + (isS ? '' : ' sell') + '">' +
+      var best = isRec(kind, i);
+      h += '<div class="row' + (lit ? ' lit' : '') + (isS ? '' : ' sell') + (best ? ' best' : '') + '">' +
+        (best ? '<span class="best-tag">Şimdi en iyi yatırım</span>' : '') +
         '<div class="row-ico">' + G.icon(u.id) + '</div>' +
         '<div class="row-body"><div class="row-name">' + u.name + '</div>' +
         '<div class="row-desc">' + u.desc + '</div>' +
@@ -157,7 +159,8 @@
     h += '<h4>Depo</h4>';
     if (d) {
       var dOk = S.cash >= d.cost;
-      h += '<div class="row feature depot' + (dOk ? ' lit' : '') + '"><div class="row-ico">' + G.icon('depo') + '</div>' +
+      var bestD = adv && adv.rec && adv.rec.type === 'depot';
+      h += '<div class="row feature depot' + (dOk ? ' lit' : '') + (bestD ? ' best' : '') + '">' + (bestD ? '<span class="best-tag">Şimdi en iyi yatırım</span>' : '') + '<div class="row-ico">' + G.icon('depo') + '</div>' +
         '<div class="row-body"><div class="row-name">' + d.name + '</div><div class="row-desc">Kapasite ' + f(G.depotCap()) + ' → ' + f(d.cap) + ' telefon.</div></div>' +
         '<div class="row-count"></div>' +
         '<div class="row-act"><button class="btn blue" data-act="depot"' + (dOk ? '' : ' disabled') + '><small>Büyüt</small><b>' + tl(d.cost) + '</b></button></div></div>';
@@ -169,7 +172,8 @@
     h += '<div class="tags">';
     ups.forEach(function (u) {
       var ok = u.cost <= S.cash;
-      h += '<button class="pricetag' + (ok ? ' can' : '') + '" data-act="upg" data-id="' + u.id + '"' + (ok ? '' : ' disabled') + '>' +
+      var bestU = adv && adv.rec && adv.rec.type === 'upg' && adv.rec.id === u.id;
+      h += '<button class="pricetag' + (ok ? ' can' : '') + (bestU ? ' best' : '') + '" data-act="upg" data-id="' + u.id + '"' + (ok ? '' : ' disabled') + '>' +
         '<span class="pt-name">' + u.name + '</span><span class="pt-desc">' + u.desc + '</span><span class="pt-price">' + tl(u.cost) + '</span></button>';
     });
     h += '</div>';
@@ -291,7 +295,9 @@
     var b = tabBadges();
     document.querySelectorAll('.tabs button').forEach(function (btn) {
       btn.classList.toggle('on', btn.dataset.tab === tab);
-      btn.classList.toggle('dot', !!b[btn.dataset.tab] && btn.dataset.tab !== tab);
+      var need = adv && recTab(adv.rec) === btn.dataset.tab;
+      btn.classList.toggle('need', !!need && btn.dataset.tab !== tab);
+      btn.classList.toggle('dot', !need && !!b[btn.dataset.tab] && btn.dataset.tab !== tab);
     });
   }
 
@@ -318,16 +324,34 @@
     setHtml($('log'), 'log', lh);
   }
 
-  function flowStatus() {
-    var S = G.S, sup = G.supTotal(), ch = G.chanTotal();
-    if (sup === 0 && ch === 0) return ['AL ile telefon al, SAT ile sat. Kâr, aradaki fark. Sonra Tedarik ve Satış sekmelerinden işi otomatiğe bağla.', ''];
-    if (sup > 0 && G.space() < 1) return ['Depo dolu, tedarik durdu. Satış noktası ekle ya da depoyu büyüt.', 'warn'];
-    if (sup > 0 && S.cash < G.buyPrice() * 0.9) return ['Kasa boş, tedarikçiler alım yapamıyor.', 'bad'];
-    if (ch > 0 && S.stock < 1 && sup < ch) return ['Stok bitti, satış noktaları boşta. Tedarik ekle ya da AL\'a bas.', 'warn'];
-    if (ch === 0) return ['Telefonlar birikiyor. Satış sekmesinden bir satış noktası aç.', 'warn'];
-    if (sup === 0) return ['Satış noktaları mal bekliyor. Tedarik sekmesinden tedarikçi al.', 'warn'];
-    return ['Dükkân dönüyor.', 'good'];
+  // ---------- ne yapmalı ----------
+  var adv = null;
+  function sideLabel(side) { return side === 's' ? 'Tedarik' : side === 'c' ? 'Satış' : 'Yükselt'; }
+  function sideTab(side) { return side === 's' ? 'tedarik' : side === 'c' ? 'satis' : 'yukselt'; }
+  function recTab(r) { return !r ? null : r.type === 'unit' ? (r.kind === 's' ? 'tedarik' : 'satis') : 'yukselt'; }
+  function renderAdvice() {
+    adv = G.advice();
+    var a = adv, r = a.rec, S = G.S;
+    var tone = a.side === 'c' ? 'sell' : 'buy';
+    var h = '<div class="adv-head ' + tone + '"><span class="adv-now">Şimdi</span>' + a.head + '</div>' +
+      '<p class="adv-why">' + a.why + '</p>';
+    if (r) {
+      var ok = r.cost <= S.cash;
+      var ico = r.type === 'unit' ? G.icon(unitList(r.kind)[r.i].id) : r.type === 'depot' ? G.icon('depo') : G.icon('borsa');
+      var gainTxt = r.type === 'depot' ? 'Kapasite ' + f(G.nextDepot().cap) : '+' + fr(r.gain) + ' tel/sn';
+      h += '<button class="adv-rec ' + tone + (ok ? ' ok' : '') + '" data-act="rec">' +
+        '<span class="adv-ico">' + ico + '</span>' +
+        '<span class="adv-txt"><b>' + r.name + '</b><small>' + gainTxt + ' · ' + tl(r.cost) + '</small></span>' +
+        '<span class="adv-go">' + (ok ? 'Al' : a.eta ? G.fmtTime(a.eta) + ' sonra' : 'Biriktir') + '</span></button>';
+    }
+    if (a.extra) h += '<p class="adv-extra">' + a.extra + '</p>';
+    setHtml($('advice'), 'advice', h);
+    $('advice').className = 'advice ' + tone;
+    var weak = a.balanced ? null : a.side;
+    $('laneBuy').classList.toggle('weak', weak === 's');
+    $('laneSell').classList.toggle('weak', weak === 'c' || weak === 'depot');
   }
+  function isRec(kind, i) { var r = adv && adv.rec; return !!r && r.type === 'unit' && r.kind === kind && r.i === i; }
 
   var BUFFS = [
     ['kampanya', 'Kampanya', ''], ['yeniModel', 'Yeni model', ''], ['efsane', 'Efsane Cuma', ''],
@@ -380,9 +404,6 @@
     setTrack($('barSell'), ch, mx);
     $('vBuyRate').textContent = fr(sup) + ' tel/sn';
     $('vSellRate').textContent = fr(ch) + ' tel/sn';
-    var fs = flowStatus();
-    $('flowMsg').textContent = fs[0];
-    $('flowMsg').className = 'flowmsg ' + fs[1];
 
     var q = '';
     if (S.crew.mudur) q += '<button class="btn blue inline" data-act="buyAll">Hepsini al</button><button class="btn red inline" data-act="sellAll">Hepsini sat</button>';
@@ -440,7 +461,18 @@
     var b = e.target.closest('[data-act]');
     if (!b || b.disabled) return;
     var a = b.dataset.act, S = G.S;
-    if (a === 'unit') G.buyUnit(b.dataset.k, +b.dataset.i);
+    if (a === 'rec') {
+      var r = adv && adv.rec;
+      if (!r) return;
+      if (r.cost <= S.cash) {
+        if (r.type === 'unit') { S[r.kind === 's' ? 'sup' : 'chan'][r.i]++; S.cash -= r.cost; G.emit('unit', { kind: r.kind, i: r.i, m: 1 }); floatText(r.name + ' +1', r.kind === 's' ? 'buyf' : 'sellf', e.clientX, e.clientY); }
+        else if (r.type === 'upg') G.buyUpgrade(r.id);
+        else if (r.type === 'depot') G.buyDepot();
+      } else {
+        tab = recTab(r); lastHtml.panel = null;
+      }
+    }
+    else if (a === 'unit') G.buyUnit(b.dataset.k, +b.dataset.i);
     else if (a === 'mode') { if (S.crew.mudur) S.buyMode = b.dataset.v === 'max' ? 'max' : +b.dataset.v; else toast('×10 ve Maks için <b>Mağaza Müdürü</b> gerekir (Ekip sekmesi).', ''); }
     else if (a === 'dispose') {
       var k = b.dataset.k, i = +b.dataset.i, u = unitList(k)[i];
@@ -480,7 +512,7 @@
       modal('Sıfırdan başla', 'Tüm ilerleme, hisseler ve başarımlar silinir. Geri alınamaz.',
         [{ label: 'Vazgeç' }, { label: 'Her şeyi sil', danger: true, fn: function () { G.hardReset(); lastHtml = {}; logItems = []; } }]);
     }
-    render(); renderPanel(); renderEmpire();
+    renderAdvice(); render(); renderPanel(); renderEmpire();
   }
 
   function soundIcon() { $('btnSound').innerHTML = G.icon(G.S.sound ? 'ses' : 'sessiz'); }
@@ -506,6 +538,7 @@
     document.addEventListener('pointerup', function () { setTimeout(function () { pressed = false; }, 0); });
     $('panel').addEventListener('click', onPanelClick);
     $('quick').addEventListener('click', onPanelClick);
+    $('advice').addEventListener('click', onPanelClick);
     document.querySelectorAll('.tabs button').forEach(function (b) {
       b.addEventListener('click', function () { tab = b.dataset.tab; lastHtml.panel = null; renderPanel(); $('panel').parentNode.scrollTop = 0; });
     });
@@ -526,12 +559,12 @@
       if (dt > 30) { G.offline(dt); return; }
       while (dt > 0) { var d = Math.min(0.1, dt); G.tick(d); dt -= d; }
     }, 100);
-    setInterval(function () { renderPanel(); renderEmpire(); }, 250);
+    setInterval(function () { renderAdvice(); renderPanel(); renderEmpire(); }, 250);
     setInterval(G.save, 10000);
     addEventListener('beforeunload', G.save);
     document.addEventListener('visibilitychange', function () { if (document.hidden) G.save(); });
     (function loop() { render(); requestAnimationFrame(loop); })();
-    renderPanel(); renderEmpire();
+    renderAdvice(); renderPanel(); renderEmpire();
   }
   document.addEventListener('DOMContentLoaded', init);
 })();

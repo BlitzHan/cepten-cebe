@@ -314,6 +314,67 @@
     return true;
   };
 
+  // ---------- darboğaz ve öneri ----------
+  // Tek bir tarafta en verimli yatırım: lira başına kazanılan telefon/sn.
+  G.visibleUnit = function (kind, i) {
+    var u = list(kind)[i];
+    return i === 0 || owned(kind)[i] > 0 || G.S.stats.earnedAll >= u.cost * 0.25;
+  };
+  G.bestFor = function (kind) {
+    var best = null, isS = kind === 's';
+    function consider(c) { if (!best || c.value > best.value) best = c; }
+    list(kind).forEach(function (u, i) {
+      if (!G.visibleUnit(kind, i)) return;
+      var cost = G.unitCost(kind, i), gain = isS ? G.supRateOne(i) : G.chanRateOne(i);
+      consider({ type: 'unit', kind: kind, i: i, name: u.name, cost: cost, gain: gain, value: gain / cost });
+    });
+    var sideTotal = isS ? G.supTotal() : G.chanTotal();
+    G.upgradesAvailable().forEach(function (up) {
+      var gain = 0, m = /^([sc])(\d+)_\d+$/.exec(up.id);
+      if (m && m[1] === kind) gain = isS ? G.supRate(+m[2]) : G.chanRate(+m[2]);
+      var g = D.GLOBAL_UPS.filter(function (x) { return x.id === up.id; })[0];
+      if (g && g.eff[isS ? 'sup' : 'chan']) gain = sideTotal * (g.eff[isS ? 'sup' : 'chan'] - 1);
+      if (gain > 0) consider({ type: 'upg', kind: kind, id: up.id, name: up.name, cost: up.cost, gain: gain, value: gain / up.cost });
+    });
+    return best;
+  };
+  G.advice = function () {
+    var S = G.S, sup = G.supTotal(), ch = G.chanTotal();
+    var a;
+    if (sup === 0 && ch === 0) {
+      a = { side: 's', head: 'İlk tedarikçini al', why: 'AL ve SAT\'a basarak para biriktir. Sonra telefonları senin yerine alacak birini, ardından satacak birini al.' };
+    } else if (sup === 0) {
+      a = { side: 's', head: 'Tedarikçi al', why: 'Satış noktaların satacak telefon bekliyor ama alan kimse yok.' };
+    } else if (ch === 0) {
+      a = { side: 'c', head: 'Satış noktası aç', why: 'Telefonlar depoda birikiyor, satan kimse yok.' };
+    } else if (G.space() < 1 && ch >= sup * 0.95) {
+      a = { side: 'depot', head: 'Depoyu büyüt', why: 'Depo dolu ve tedarikçiler durdu.' };
+    } else if (G.space() < 1) {
+      a = { side: 'c', head: 'Satış noktası aç', why: 'Depo dolu, tedarikçiler durdu. Satış, alışa yetişemiyor.' };
+    } else if (S.cash < G.buyPrice() && S.stock >= 1) {
+      a = { side: 'c', head: 'Satışı artır', why: 'Kasa boş, tedarikçiler alacak para bulamıyor. Stoktakileri sat, satış noktası ekle.' };
+    } else if (sup < ch * 0.85) {
+      a = { side: 's', head: 'Tedarik ekle', why: 'Satış noktaların saniyede ' + G.fmtRate(ch) + ' telefon satabilir ama sadece ' + G.fmtRate(sup) + ' telefon geliyor. Tezgâh boş kalıyor.' };
+    } else if (ch < sup * 0.85) {
+      a = { side: 'c', head: 'Satış noktası aç', why: 'Saniyede ' + G.fmtRate(sup) + ' telefon alıyorsun ama sadece ' + G.fmtRate(ch) + ' telefon satılıyor. Fazlası depoda birikiyor.' };
+    } else {
+      a = { side: sup <= ch ? 's' : 'c', head: 'Denge iyi, ikisini birlikte büyüt', why: 'Alış ve satış birbirine yakın. Sıradaki en verimli yatırım:', balanced: true };
+    }
+    if (a.side === 'depot') {
+      var d = G.nextDepot();
+      a.rec = d ? { type: 'depot', name: d.name, cost: d.cost } : null;
+      if (!d) { a.side = 'c'; a.head = 'Satış noktası aç'; }
+    }
+    if (a.side !== 'depot') a.rec = G.bestFor(a.side);
+    if (a.rec && a.rec.cost > S.cash) {
+      var pr = Math.max(0, G.rt.profit);
+      a.eta = pr > 0 ? (a.rec.cost - S.cash) / pr : null;
+    }
+    var e = G.nextEra();
+    if (e && S.cash >= e.cost) a.extra = e.name + ' çağına geçebilirsin: telefon başına kâr ×3.';
+    return a;
+  };
+
   // ---------- halka arz ----------
   G.sharesTotal = function () { return Math.floor(Math.sqrt(G.S.stats.earnedAll / D.SHARE_UNIT)); };
   G.ipoGain = function () { return Math.max(0, G.sharesTotal() - G.S.shares); };
