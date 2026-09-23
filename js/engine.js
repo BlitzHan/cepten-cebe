@@ -347,7 +347,7 @@
   };
 
   // Otomasyonun sürekli akışı: tıklamalardan bağımsız, kapasite ve darboğazdan hesaplanır.
-  G.flowState = { full: false, drain: false };
+  G.flowState = { full: false, drain: false, broke: false };
   G.flow = function () {
     var S = G.S, sup = G.supTotal(), ch = G.chanTotal();
     // Bant otomasyonun gerçek durumunu gösterir: depo doluyorsa tedarikçiler tam hızda alır,
@@ -356,9 +356,13 @@
     var cap = G.depotCap(), st = G.flowState;
     if (S.stock >= Math.min(cap * 0.98, cap - ch * 2)) st.full = true; else if (S.stock < cap * 0.5) st.full = false;
     if (S.stock > Math.max(20, ch * 10)) st.drain = true; else if (S.stock < 1) st.drain = false;
+    // Kasa yetmezse tedarikçiler parası olduğu kadar alır; o durumda ölçülen gerçek hız gösterilir.
+    var perSec = G.buyPrice() * sup;
+    if (S.cash < perSec * 0.5) st.broke = true; else if (S.cash > perSec * 3) st.broke = false;
     var buy, sell;
     if (sup > ch) { buy = st.full ? ch : sup; sell = ch; }
     else { buy = sup; sell = st.drain ? ch : sup; }
+    if (st.broke && sup > 0) { buy = Math.min(buy, G.rt.buy); sell = Math.min(sell, G.rt.sell); }
     // Kasadaki kâr/sn kalıcı kazançtır: uzun vadede ancak satılan kadar alınır, min(tedarik, satış).
     // Stoğa ve kasaya hiç bakmaz. Ucuz tedarikçi önce çalışır, pahalı kanal önce satar.
     var steady = Math.min(sup, ch);
@@ -367,12 +371,13 @@
     supOrder.forEach(function (i) { var n = Math.min(left, G.supRate(i)); cost += n * bp * D.SUPPLIERS[i].mult; left -= n; });
     left = steady;
     chanOrder.forEach(function (j) { var n = Math.min(left, G.chanRate(j)); rev += n * sp * D.CHANNELS[j].mult; left -= n; });
-    return { buy: buy, sell: sell, profit: rev - cost, filling: sup > ch && !st.full, fillIn: sup > ch ? Math.max(0, cap - S.stock) / (sup - ch) : 0 };
+    return { buy: buy, sell: sell, profit: rev - cost, filling: sup > ch && !st.full && !st.broke, broke: st.broke && sup > 0, fillIn: sup > ch ? Math.max(0, cap - S.stock) / (sup - ch) : 0 };
   };
   // Öneri sadece otomasyona bakar (tedarik ve satış hızı). Elle al/sat öneriyi değiştirmez.
   G.advice = function () {
     var S = G.S, sup = G.supTotal(), ch = G.chanTotal();
     var depotFull = S.stock >= G.depotCap() * 0.9;
+    G.flow();  // kasa durumu (flowState.broke) güncel olsun
     var a;
     if (sup === 0 && ch === 0) {
       a = { side: 's', head: 'İlk tedarikçini al', why: 'AL ve SAT\'a basarak para biriktir. Sonra telefonları senin yerine alacak birini, ardından satacak birini al.' };
@@ -380,6 +385,8 @@
       a = { side: 's', head: 'Tedarikçi al', why: 'Satış noktaların satacak telefon bekliyor ama alan kimse yok.' };
     } else if (ch === 0) {
       a = { side: 'c', head: 'Satış noktası aç', why: 'Telefonlar depoda birikiyor, satan kimse yok.' };
+    } else if (G.flowState.broke) {
+      a = { side: 'c', head: 'Kasa boş, tedarik bekliyor', why: 'Tedarikçiler alacak para bulamıyor, sadece satıştan gelen parayla alıyorlar. Birkaç saniye bekle ya da stoktakileri SAT ile nakde çevir.' };
     } else if (sup < ch * 0.85) {
       a = { side: 's', head: 'Tedarik ekle', why: 'Satış noktaların saniyede ' + G.fmtRate(ch) + ' telefon satabilir ama sadece ' + G.fmtRate(sup) + ' telefon geliyor. Tezgâh boş kalıyor.' };
     } else if (ch < sup * 0.85) {

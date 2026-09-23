@@ -368,7 +368,7 @@
   }
   function rateText(actual, capacity) {
     var t = fr(actual) + ' tel/sn';
-    if (capacity > 0 && actual < capacity * 0.9) t += '<small>kapasite ' + fr(capacity) + '</small>';
+    if (capacity > 0 && actual < capacity * 0.99) t += '<small>kapasite ' + fr(capacity) + '</small>';
     return t;
   }
 
@@ -379,7 +379,8 @@
     $('vProfit').textContent = (pr >= 0 ? '+' : '') + tl(pr) + '/sn';
     $('vProfit').className = 'led-sub' + (pr < 0 ? ' neg' : '');
     $('vStock').textContent = f(S.stock);
-    $('vDepot').textContent = S.stock < 1 && fl.sell > 0.05 ? 'Gelen anında satılıyor'
+    $('vDepot').textContent = fl.broke ? 'Kasa boş · tedarik parası kadar alıyor'
+      : S.stock < 1 && fl.sell > 0.05 ? 'Gelen anında satılıyor'
       : fl.filling ? 'Depo doluyor · ' + G.fmtTime(fl.fillIn) + ' sonra dolar'
       : S.stock >= G.depotCap() * 0.5 && fl.buy < G.supTotal() ? 'Depo dolu (' + f(G.depotCap()) + ') · satıldıkça alınıyor'
       : 'Kapasite ' + f(G.depotCap()) + ' · ' + D.DEPOTS[S.depot].name;
