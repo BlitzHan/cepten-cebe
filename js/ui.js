@@ -432,7 +432,7 @@
     setHtml($('buffs'), 'buffs', bh);
 
     var ne = G.nextEra();
-    $('eraChip').innerHTML = G.era().short + (ne ? '<small>→ ' + ne.short + (S.cash >= ne.cost ? ' hazır' : ' %' + Math.floor(S.cash / ne.cost * 100)) + '</small>' : '');
+    $('eraChip').innerHTML = '<span class="cur">' + G.era().short + '</span>' + (ne ? '<small>→ ' + ne.short + (S.cash >= ne.cost ? ' hazır' : ' %' + Math.floor(S.cash / ne.cost * 100)) + '</small>' : '');
     $('eraChip').classList.toggle('ready', !!ne && S.cash >= ne.cost);
     renderOffer();
   }
@@ -544,7 +544,7 @@
       '<li>İkisini dengede tut. Tezgâhın altındaki <b>öneri</b> kutusu hangisine yatırım yapman gerektiğini söyler.</li>' +
       '<li><b>Yükselt</b> ve <b>Ekip</b> ile hızlan, kondisyonu artır, yeni telefon çağına geç.</li>' +
       '</ol>' +
-      '<p>Bu turda 1 Tn ₺ kazanınca <b>halka arz</b> ile baştan başlar, kalıcı hisse bonusu kazanırsın. Klavyede A al, S sat.</p>',
+      '<p>Bu turda 1 Trilyon ₺ kazanınca <b>halka arz</b> ile baştan başlar, kalıcı hisse bonusu kazanırsın. Klavyede A al, S sat.</p>',
       [{ label: 'Kepengi aç', primary: true }]);
   }
 

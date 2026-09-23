@@ -47,11 +47,11 @@
     var s;
     if (n < 1e6) s = Math.floor(n).toLocaleString('tr-TR');
     else {
-      var units = ['Mn', 'Mr', 'Tn', 'Kd', 'Kn', 'Sk', 'Sp', 'Ok', 'Nn', 'Dc'];
+      var units = ['Milyon', 'Milyar', 'Trilyon', 'Katrilyon', 'Kentilyon', 'Sekstilyon', 'Septilyon', 'Oktilyon', 'Nonilyon', 'Desilyon'];
       var e = Math.floor(Math.log10(n) / 3);
       var u = units[e - 2];
       if (!u) s = n.toExponential(2);
-      else s = (n / Math.pow(1000, e)).toFixed(2).replace('.', ',') + ' ' + u;
+      else s = (n / Math.pow(1000, e)).toFixed(2).replace(/\.?0+$/, '').replace('.', ',') + ' ' + u;
     }
     return (neg ? '-' : '') + s;
   };
