@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Cepten Cebe · Telefon İmparatorluğu</title>
+  <meta name="description" content="Tıkla, telefon al, sat. Elden satıştan AVM'ye, atölyeden fabrikaya bir telefon imparatorluğu kur.">
+  <meta name="theme-color" content="#15111f">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 48 48'%3E%3Crect x='6' y='4' width='22' height='38' rx='5' fill='%23ffb938'/%3E%3Crect x='9' y='8' width='16' height='26' rx='2' fill='%231a1530'/%3E%3Ccircle cx='36' cy='30' r='10' fill='%233fae70'/%3E%3C/svg%3E">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <header class="top">
+    <div class="brand">
+      <div id="logo" class="logo"></div>
+      <div><h1>Cepten Cebe</h1><small>Telefon İmparatorluğu</small></div>
+    </div>
+    <div class="top-right">
+      <span id="eraChip" class="era-chip"></span>
+      <button id="btnSound" class="icon-btn" title="Ses aç/kapat">🔊</button>
+    </div>
+  </header>
+
+  <main class="layout">
+    <section class="left">
+      <div class="hud">
+        <div class="stat cash"><label>Nakit</label><b id="vCash">0 ₺</b><small id="vProfit">+0 ₺/sn</small></div>
+        <div class="stat stock"><label>Stok</label><b id="vStock">0</b><div class="bar"><i id="barStock"></i></div><small id="vDepot"></small></div>
+        <div class="stat cond"><label>Kondisyon</label><b id="vGrade">D · Hurda</b><small id="vCond"></small></div>
+      </div>
+
+      <div class="stage">
+        <button id="btnBuy" class="big buy" aria-label="Telefon al">
+          <div class="art" id="artPhone"></div>
+          <span class="lbl" id="lblBuy">AL</span>
+          <span class="sub" id="vBuyPrice"></span>
+        </button>
+        <button id="btnSell" class="big sell" aria-label="Telefon sat">
+          <div class="art" id="artCash"></div>
+          <span class="lbl">SAT</span>
+          <span class="sub" id="vSellPrice"></span>
+        </button>
+      </div>
+      <div class="under-stage"><span id="vMargin"></span><span id="combo" class="combo"></span></div>
+      <div id="quick" class="quick"></div>
+
+      <div class="flow">
+        <div class="flow-row"><span>Alış</span><div class="fbar"><i id="barBuy" class="b"></i></div><b id="vBuyRate">0</b></div>
+        <div class="flow-row"><span>Satış</span><div class="fbar"><i id="barSell" class="s"></i></div><b id="vSellRate">0</b></div>
+        <div id="flowMsg" class="flowmsg"></div>
+        <div id="buffs" class="buffs"></div>
+      </div>
+
+      <nav class="tabs">
+        <button data-tab="tedarik" class="on">📦 Tedarik</button>
+        <button data-tab="satis">🏪 Satış</button>
+        <button data-tab="yukselt">⚡ Yükselt</button>
+        <button data-tab="ekip">👥 Ekip</button>
+        <button data-tab="holding">📈 Holding</button>
+      </nav>
+      <div id="panel" class="panel"></div>
+    </section>
+
+    <aside class="right">
+      <h2>İmparatorluğun</h2>
+      <div id="empire"></div>
+      <h4>Olay günlüğü</h4>
+      <ul id="log" class="log"></ul>
+      <p class="kbd">Klavye: <kbd>A</kbd> al · <kbd>S</kbd> sat</p>
+    </aside>
+  </main>
+
+  <div id="eventCard" class="event-card" hidden></div>
+  <div id="toasts" class="toasts"></div>
+  <div id="fx" class="fx"></div>
+  <div id="modal" class="modal" hidden></div>
+
+  <script src="js/data.js"></script>
+  <script src="js/engine.js"></script>
+  <script src="js/state.js"></script>
+  <script src="js/art.js"></script>
+  <script src="js/audio.js"></script>
+  <script src="js/ui.js"></script>
+</body>
+</html>
