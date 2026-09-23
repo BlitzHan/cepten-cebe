@@ -112,11 +112,11 @@
     '</svg>';
 
   var LOGO =
-    '<svg viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">' +
-      '<rect x="6" y="4" width="22" height="38" rx="5" fill="#ffb938"/>' +
-      '<rect x="9" y="8" width="16" height="26" rx="2" fill="#1a1530"/>' +
-      '<circle cx="36" cy="30" r="10" fill="#3fae70"/>' +
-      '<text x="36" y="35" font-size="13" font-weight="800" font-family="system-ui,sans-serif" text-anchor="middle" fill="#fff">₺</text>' +
+    '<svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg">' +
+      '<rect x="5" y="2" width="15" height="27" rx="3" fill="none" stroke="#fff" stroke-width="2.6"/>' +
+      '<path d="M10 25.5h5" stroke="#fff" stroke-width="2.2" stroke-linecap="round"/>' +
+      '<circle cx="23" cy="20" r="7" fill="#FFD21F"/>' +
+      '<text x="23" y="24.2" font-size="11" font-weight="900" font-family="Archivo, sans-serif" text-anchor="middle" fill="#16181C">₺</text>' +
     '</svg>';
 
   G.ART = { phone: function (era) { return PHONES[Math.min(era, PHONES.length - 1)]; }, cash: CASH, drawer: DRAWER, logo: LOGO };

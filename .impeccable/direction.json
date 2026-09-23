@@ -1,0 +1,125 @@
+{
+  "title": "Cepten Cebe için görsel dünya",
+  "question": "Zar GSM dükkânı tabelasını seçti. Bununla devam edelim mi, bir alternatif mi, yoksa yeniden mi atalım?",
+  "options": [
+    {
+      "id": "assigned",
+      "label": "GSM Dükkânı Tabelası",
+      "kicker": "THE ROLL",
+      "lineage": "Türkiye'deki telefoncu cepheleri: ışıklı pleksi tabelalar, vitrin çıkartmaları, alüminyum kepenk",
+      "thesis": "Ekran akşamüstü ışıkları yanmış bir telefoncu cephesi: her birim bir ışıklı tabela, her fiyat bir vitrin çıkartması.",
+      "palette": ["#F6F3EA", "#D7261E", "#1E3E96", "#FFD21F", "#C9CDD1", "#16181C"],
+      "materials": ["arkadan aydınlatmalı pleksi tabela", "vinil vitrin çıkartması", "oluklu alüminyum kepenk"],
+      "viewport": "Açık gri kepenk zemin; solda iki büyük ışıklı tabela kutusu AL ve SAT, üstünde kasa ekranı gibi nakit; ortada vitrin camına dizilmiş birim tabelaları; sağda dükkânın tabela duvarı ve fişten çıkan olay günlüğü.",
+      "risk": "Tabela harfleri çekingen boyutta kalırsa sıradan bir e-ticaret sitesine döner; ölçek cesur olmak zorunda.",
+      "raised": [
+        { "from": "Osiloskop tezgâhı", "raise": "Tüm paneller tek bir tabela modülüne oturuyor; ekranda tek ölçü sistemi var." },
+        { "from": "Emisyon çizgisi rayı", "raise": "Durum renkle değil ışıkla anlatılıyor: yanan tabela alınabilir, sönük tabela kilitli, yanıp sönen hazır." },
+        { "from": "Kurumsal broşür", "raise": "Renk bütçesi: kırmızı sadece SAT ve para, sarı sadece fırsat çıkartmaları, lacivert sadece AL." },
+        { "from": "Yerçekimi yağmuru bahçesi", "raise": "Telefonlar tedarikten satışa akarken görünüyor: alış/satış göstergesi yürüyen bir tezgâh bandı." }
+      ]
+    },
+    {
+      "id": "model-pick",
+      "label": "Vitrin ve Fiyat Etiketleri",
+      "kicker": "IMPECCABLE’S PICK",
+      "lineage": "telefoncu vitrini, el yazısı fiyat kartonları, yıldız çıkartmalar",
+      "thesis": "Oyun bir cam vitrin: her birim karton fiyat etiketli bir kutu, fırsatlar yıldız çıkartma.",
+      "palette": ["#FFFFFF", "#111111", "#E30613", "#FFE500"],
+      "materials": ["cam vitrin", "karton fiyat etiketi", "yıldız çıkartma"],
+      "viewport": "Beyaz raflı vitrin; AL/SAT büyük fiyat kartonları; birimler raftaki kutular.",
+      "risk": "En tanıdık yön, bu kategoride çoğu tasarımın vardığı yer; oyun yerine bir mağaza sayfası gibi okunabilir."
+    },
+    {
+      "id": "challenger-sticker",
+      "label": "Çıkartma Yağmuru",
+      "verdict": "competitive",
+      "lineage": "The Designers Republic plak kapakları",
+      "thesis": "Telefoncu camındaki üst üste binmiş çıkartma kalabalığı (TAKSİT, IMEI KAYITLI, HAT AÇILIR) kusursuz bir sistem olarak kuruluyor.",
+      "palette": ["#0B0B0B", "#FF2E88", "#FF7A00", "#FFFFFF"],
+      "materials": ["düz baskı", "barkod parçaları", "kayıt işaretleri"],
+      "viewport": "Siyah zemine kilitlenmiş ızgara, kenarda uyarı etiketleri, ortada bağıran tek kelime: SAT.",
+      "case": "Kitle camdaki çıkartma kalabalığını hemen tanıyor; ama yoğunluk AL/SAT'ı gölgeleyebilir, netlikte kaybediyor.",
+      "risk": "Siyah zemin ve yoğunluk, kaçınmak istediğin koyu dashboard hissine yaklaşabilir.",
+      "hero": "https://impeccable.style/worlds/cards/tdr-info-noise-sleeve-hero.webp",
+      "board": "https://impeccable.style/worlds/cards/tdr-info-noise-sleeve.webp"
+    },
+    {
+      "id": "challenger-scope",
+      "label": "Osiloskop Tezgâhı",
+      "verdict": "declined",
+      "lineage": "CRT osiloskop",
+      "thesis": "Alış/satış akışı fosfor dalgası olarak ölçülüyor.",
+      "palette": ["#0A0F0A", "#39FF6A", "#FFB300"],
+      "materials": ["fosfor cam", "kazınmış ızgara"],
+      "viewport": "Tek ekran, iki kanal: alış ve satış dalgası.",
+      "case": "Telefon dükkânıyla bağı yok, oyuncu kendini tanımıyor.",
+      "kept": "Tek ölçü sistemi disiplini.",
+      "risk": "Koyu ve neon, tam kaçındığın yer."
+    },
+    {
+      "id": "challenger-rail",
+      "label": "Emisyon Çizgisi Rayı",
+      "verdict": "declined",
+      "lineage": "spektrogram",
+      "thesis": "Her şey tek raya asılı ince çizgiler.",
+      "palette": ["#2A2A2C", "#E8E2D4", "#FFC23A"],
+      "materials": ["kömür gri bant", "saç teli çizgiler"],
+      "viewport": "Kenar dışı bir ray, açılan tek panel.",
+      "case": "Oyuna fazla soğuk ve soyut.",
+      "kept": "Durumun renkle değil biçimle anlatılması.",
+      "risk": "Okunurluk düşük."
+    },
+    {
+      "id": "challenger-civic",
+      "label": "Kurumsal Broşür",
+      "verdict": "declined",
+      "lineage": "geç modern kurumsal tanıtım",
+      "thesis": "Kemik beyazı sayfa, tek renkli kurdele.",
+      "palette": ["#F7F7FA", "#1B1547", "#6B5CE7"],
+      "materials": ["WebGL kurdele", "ince çizgiler"],
+      "viewport": "Boş beyaz alan, tek mor buton.",
+      "case": "Bir SaaS sitesi gibi okunur, esnaf hissi sıfır.",
+      "kept": "Rengi tek yerde harcama cesareti.",
+      "risk": "Tam bir kurumsal site görünümü."
+    },
+    {
+      "id": "challenger-rain",
+      "label": "Yerçekimi Yağmuru Bahçesi",
+      "verdict": "declined",
+      "lineage": "gerçeküstü bahçe",
+      "thesis": "Renkli yağmurlar farklı yönlere düşüyor.",
+      "palette": ["#5F6B5E", "#4A78C2", "#C2463C"],
+      "materials": ["vektör alanı", "yağmur damlaları"],
+      "viewport": "Yüzen gölet, bulutlar.",
+      "case": "Konuyla ilgisiz.",
+      "kept": "Akışın yönünün görünür olması.",
+      "risk": "Oyun anlaşılmaz."
+    },
+    {
+      "id": "challenger-cape",
+      "label": "İpli Pelerin",
+      "verdict": "declined",
+      "lineage": "moda, büzgülü kumaş",
+      "thesis": "Tek altın ip düz yüzeyi hacme çeviriyor.",
+      "palette": ["#0C0C0C", "#C9A646", "#4A4F57"],
+      "materials": ["mat siyah ipek", "altın ip"],
+      "viewport": "Siyah yarım daire, tek altın ip.",
+      "case": "Konuyla ilgisiz ve koyu.",
+      "kept": "Tek bir kontrol rengi.",
+      "risk": "Lüks moda hissi."
+    }
+  ],
+  "reroll": { "registers": ["safer", "bolder"] },
+  "buildPath": { "value": "code", "toggle": false },
+  "canon": true,
+  "canonCard": {
+    "label": "Kategori standardı",
+    "thesis": "Cookie Clicker tarzı klasik tarayıcı clicker'ı, kusursuz işçilikle.",
+    "palette": ["#2B2118", "#F2E6CF", "#C8762E"],
+    "materials": ["ahşap panel", "parlak ikonlar"],
+    "viewport": "Solda büyük tıklama nesnesi, sağda bina listesi.",
+    "risk": "Tasarım gereği rakiplerden ayırt edilemez."
+  },
+  "steer": true
+}

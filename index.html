@@ -5,74 +5,104 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <title>Cepten Cebe · Telefon İmparatorluğu</title>
   <meta name="description" content="Tıkla, telefon al, sat. Elden satıştan AVM'ye, atölyeden fabrikaya bir telefon imparatorluğu kur.">
-  <meta name="theme-color" content="#15111f">
-  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 48 48'%3E%3Crect x='6' y='4' width='22' height='38' rx='5' fill='%23ffb938'/%3E%3Crect x='9' y='8' width='16' height='26' rx='2' fill='%231a1530'/%3E%3Ccircle cx='36' cy='30' r='10' fill='%233fae70'/%3E%3C/svg%3E">
+  <meta name="theme-color" content="#D7261E">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='4' fill='%23D7261E'/%3E%3Cpath d='M9 22V10h7a4 4 0 0 1 0 8H9' fill='none' stroke='%23fff' stroke-width='3.5'/%3E%3Ccircle cx='23' cy='22' r='3' fill='%23FFD21F'/%3E%3C/svg%3E">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..900&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
-  <header class="top">
-    <div class="brand" title="Cepten Cebe · Telefon İmparatorluğu">
-      <div id="logo" class="logo"></div>
+<!--
+THESIS: Oyun, bir Türk telefoncusunun cephesi. Koyu dashboard kartları ve genel clicker kalıbı reddedilir; her birim ışıklı bir pleksi tabela, her fiyat bir vitrin çıkartması.
+OWN-WORLD: Oluklu alüminyum kepenk grisi zemin; arkadan aydınlatmalı pleksi tabelalar (kırmızı SAT ve para, lacivert AL, beyaz birim tabelaları); sarı vinil fiyat çıkartmaları; döviz bürosu kırmızı LED kasa ekranı; termal fiş kâğıdı günlük. Tek yazı ailesi Archivo: tabelada daraltılmış 800–900, arayüzde normal genişlik. Durum ışıkla anlatılır: yanan tabela alınabilir, sönük tabela kilitli.
+STORY: Oyuncu dükkânın önünde durur, AL ve SAT tabelalarına basar, vitrindeki tabelaları yaktıkça dükkân büyür.
+FIRST VIEWPORT: Üstte 48px kırmızı dükkân tabelası. Sol sütunda LED kasa, stok ve kondisyon çıkartması, altında iki büyük ışıklı kutu (lacivert AL, kırmızı SAT) ve yürüyen tezgâh bandı. Ortada tabela sekmeleri ve ışıklı birim satırları. Sağda dükkân duvarı ve fiş.
+FORM: GSM dükkânı tabelası, kendi listemde 5. sıra; seed ae314ff5.
+FINISH: unreviewed and undocumented is unfinished; this build ends with the finish review, the verdict, DESIGN.md, and every shipping raster carrying its provenance
+-->
+  <header class="fascia">
+    <div class="fascia-name">
+      <span class="fascia-mark" id="logo"></span>
       <h1>Cepten Cebe</h1>
+      <span class="fascia-sub">GSM · İletişim · Aksesuar</span>
     </div>
-    <div class="top-right">
-      <span id="eraChip" class="era-chip"></span>
-      <button id="btnSound" class="icon-btn" title="Ses aç/kapat">🔊</button>
+    <div class="fascia-right">
+      <span id="eraChip" class="era-plate"></span>
+      <button id="btnSound" class="sound-btn" title="Ses aç/kapat" aria-label="Ses aç/kapat"></button>
     </div>
   </header>
 
   <main class="layout">
-    <section class="left">
-      <div class="hud">
-        <div class="stat cash"><label>Nakit</label><b id="vCash">0 ₺</b><small id="vProfit">+0 ₺/sn</small></div>
-        <div class="stat stock"><label>Stok</label><b id="vStock">0</b><div class="bar"><i id="barStock"></i></div><small id="vDepot"></small></div>
-        <div class="stat cond"><label>Kondisyon</label><b id="vGrade">D · Hurda</b><small id="vCond"></small></div>
+    <section class="left" aria-label="Tezgâh">
+      <div class="led-board">
+        <span class="led-label">Kasa</span>
+        <b id="vCash" class="led">0 ₺</b>
+        <span id="vProfit" class="led-sub">+0 ₺/sn</span>
+      </div>
+
+      <div class="plates">
+        <div class="plate">
+          <span class="plate-label">Stok</span>
+          <b id="vStock" class="plate-num">0</b>
+          <div class="shelf"><i id="barStock"></i></div>
+          <small id="vDepot"></small>
+        </div>
+        <div class="plate grade-plate">
+          <div class="grade-sticker" id="gradeSticker"><b id="vGradeLetter">D</b></div>
+          <div>
+            <span class="plate-label">Kondisyon</span>
+            <b id="vGrade" class="grade-name">Hurda</b>
+            <small id="vCond"></small>
+          </div>
+        </div>
       </div>
 
       <div class="stage">
-        <button id="btnBuy" class="big buy" aria-label="Telefon al">
-          <div class="art" id="artPhone"></div>
-          <span class="lbl" id="lblBuy">AL</span>
-          <span class="sub" id="vBuyPrice"></span>
+        <button id="btnBuy" class="lightbox lb-buy" aria-label="Telefon al">
+          <span class="lb-face">
+            <span class="art" id="artPhone"></span>
+            <span class="lbl" id="lblBuy">AL</span>
+          </span>
+          <span class="price-sticker" id="vBuyPrice"></span>
         </button>
-        <button id="btnSell" class="big sell" aria-label="Telefon sat">
-          <div class="art" id="artCash"></div>
-          <span class="lbl">SAT</span>
-          <span class="sub" id="vSellPrice"></span>
+        <button id="btnSell" class="lightbox lb-sell" aria-label="Telefon sat">
+          <span class="lb-face">
+            <span class="art" id="artCash"></span>
+            <span class="lbl">SAT</span>
+          </span>
+          <span class="price-sticker" id="vSellPrice"></span>
         </button>
       </div>
       <div class="under-stage"><span id="vMargin"></span><span id="combo" class="combo"></span></div>
       <div id="quick" class="quick"></div>
 
-      <div class="flow">
-        <div class="flow-row"><span>Alış</span><div class="fbar"><i id="barBuy" class="b"></i></div><b id="vBuyRate">0</b></div>
-        <div class="flow-row"><span>Satış</span><div class="fbar"><i id="barSell" class="s"></i></div><b id="vSellRate">0</b></div>
-        <div id="flowMsg" class="flowmsg"></div>
+      <div class="belt">
+        <div class="belt-row"><span>Alış</span><div class="track buy"><i id="barBuy"></i></div><b id="vBuyRate">0</b></div>
+        <div class="belt-row"><span>Satış</span><div class="track sell"><i id="barSell"></i></div><b id="vSellRate">0</b></div>
+        <p id="flowMsg" class="flowmsg"></p>
         <div id="buffs" class="buffs"></div>
       </div>
-
     </section>
 
-    <section class="center">
-      <nav class="tabs">
-        <button data-tab="tedarik" class="on">📦 Tedarik</button>
-        <button data-tab="satis">🏪 Satış</button>
-        <button data-tab="yukselt">⚡ Yükselt</button>
-        <button data-tab="ekip">👥 Ekip</button>
-        <button data-tab="holding">📈 Holding</button>
+    <section class="center" aria-label="Vitrin">
+      <nav class="tabs" aria-label="Bölümler">
+        <button data-tab="tedarik" class="on">Tedarik</button>
+        <button data-tab="satis">Satış</button>
+        <button data-tab="yukselt">Yükselt</button>
+        <button data-tab="ekip">Ekip</button>
+        <button data-tab="holding">Holding</button>
       </nav>
       <div id="panel" class="panel"></div>
     </section>
 
-    <aside class="right">
-      <h2>İmparatorluğun</h2>
+    <aside class="right" aria-label="Dükkân">
       <div id="empire"></div>
-      <h4>Olay günlüğü</h4>
-      <ul id="log" class="log"></ul>
-      <p class="kbd">Klavye: <kbd>A</kbd> al · <kbd>S</kbd> sat</p>
+      <div class="receipt">
+        <div class="receipt-head">Cepten Cebe GSM<br><span>Olay fişi</span></div>
+        <ul id="log" class="log"></ul>
+        <p class="receipt-foot">Klavye: A al · S sat</p>
+      </div>
     </aside>
   </main>
 
@@ -84,6 +114,7 @@
   <script src="js/data.js"></script>
   <script src="js/engine.js"></script>
   <script src="js/state.js"></script>
+  <script src="js/icons.js"></script>
   <script src="js/art.js"></script>
   <script src="js/audio.js"></script>
   <script src="js/ui.js"></script>

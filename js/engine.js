@@ -243,11 +243,11 @@
     D.CLICK_TIERS.forEach(function (c, k) {
       var id = 'click' + k;
       if (!S.upg[id] && (k === 0 || S.upg['click' + (k - 1)]) && S.stats.earned >= c.cost * 0.3)
-        out.push({ id: id, name: c.name, desc: c.desc, cost: c.cost, icon: '👆' });
+        out.push({ id: id, name: c.name, desc: c.desc, cost: c.cost, icon: '' });
     });
     D.GLOBAL_UPS.forEach(function (u) {
       if (!S.upg[u.id] && S.stats.earned >= u.cost * 0.3)
-        out.push({ id: u.id, name: u.name, desc: u.desc, cost: u.cost, icon: '⚡' });
+        out.push({ id: u.id, name: u.name, desc: u.desc, cost: u.cost, icon: '' });
     });
     [['s', D.SUPPLIERS, S.sup], ['c', D.CHANNELS, S.chan]].forEach(function (g) {
       g[1].forEach(function (unit, i) {
@@ -310,7 +310,7 @@
   G.campaign = function () {
     if (!G.S.crew.can || (G.S.cd.kampanya || 0) > G.S.t) return false;
     G.addBuff('kampanya', 30); G.S.cd.kampanya = G.S.t + 600;
-    G.emit('log', { text: '📣 Kampanya başladı: 30 sn satış fiyatı ×2', tone: 'good' });
+    G.emit('log', { text: 'Kampanya başladı: 30 sn satış fiyatı ×2', tone: 'good' });
     return true;
   };
 
@@ -334,30 +334,30 @@
     { id: 'musteri', w: 3, ok: function () { return G.S.stock >= 10; }, fire: function () {
       var q = Math.max(20, Math.floor(G.chanTotal() * 15), G.clickPower('sell') * 5);
       var price = G.sellPrice() * 1.5;
-      G.offer = { id: 'musteri', until: G.S.t + 12, dur: 12, title: '🧔 Kapıda pazarlıkçı müşteri',
+      G.offer = { id: 'musteri', until: G.S.t + 12, dur: 12, title: 'Kapıda pazarlıkçı müşteri',
         text: G.fmt(q) + ' telefonu tanesi ' + G.fmt(price) + ' ₺\'den alırım, çabuk karar ver!',
         btn: 'Sat', q: q, price: price };
     } },
     { id: 'cekmece', w: 2, ok: function () { return G.space() >= 5; }, fire: function () {
       var q = Math.max(10, Math.floor(G.supTotal() * 20));
-      G.offer = { id: 'cekmece', until: G.S.t + 12, dur: 12, title: '🗄️ Çekmece bereketi',
+      G.offer = { id: 'cekmece', until: G.S.t + 12, dur: 12, title: 'Çekmece bereketi',
         text: 'Teyzen eski telefonları buldu: ' + G.fmt(q) + ' telefon bedava!', btn: 'Topla', q: q };
     } },
     { id: 'yeniModel', w: 2, fire: function () {
       G.addBuff('yeniModel', 60);
-      G.emit('log', { text: '🆕 Yeni model tanıtıldı! 60 sn satış hızı ×2', tone: 'good', big: true });
+      G.emit('log', { text: 'Yeni model tanıtıldı! 60 sn satış hızı ×2', tone: 'good', big: true });
     } },
     { id: 'kur', w: 1.5, fire: function () {
       G.addBuff('kur', 90);
-      G.emit('log', { text: '💱 Kur zıpladı! 90 sn alış +%20, satış +%30. Stok varsa şimdi sat.', tone: 'warn', big: true });
+      G.emit('log', { text: 'Kur zıpladı! 90 sn alış +%20, satış +%30. Stok varsa şimdi sat.', tone: 'warn', big: true });
     } },
     { id: 'gumruk', w: 1, ok: function () { return G.S.sup[4] > 0; }, fire: function () {
       G.addBuff('gumruk', 60, true);
-      G.emit('log', { text: '🛃 Konteyner gümrükte takıldı. İthalat Hattı ' + G.fmtTime(G.buffLeft('gumruk')) + ' durdu.', tone: 'bad', big: true });
+      G.emit('log', { text: 'Konteyner gümrükte takıldı. İthalat Hattı ' + G.fmtTime(G.buffLeft('gumruk')) + ' durdu.', tone: 'bad', big: true });
     } },
     { id: 'efsane', w: 1, ok: function () { return G.chanTotal() > 0; }, fire: function () {
       G.addBuff('efsane', 30);
-      G.emit('log', { text: '🏷️ Efsane Cuma! 30 sn satış hacmi ×3, fiyat %10 indirimli.', tone: 'good', big: true });
+      G.emit('log', { text: 'Efsane Cuma! 30 sn satış hacmi ×3, fiyat %10 indirimli.', tone: 'good', big: true });
     } }
   ];
   G.fireEvent = function (id) {
@@ -377,16 +377,16 @@
       var n = Math.min(o.q, Math.floor(G.S.stock));
       if (n > 0) { G.S.stock -= n; earn(n * o.price, n); }
       G.S.stats.customers++;
-      G.emit('log', { text: '🤝 Müşteriye ' + G.fmt(n) + ' telefon satıldı: +' + G.fmt(n * o.price) + ' ₺', tone: 'good' });
+      G.emit('log', { text: 'Müşteriye ' + G.fmt(n) + ' telefon satıldı: +' + G.fmt(n * o.price) + ' ₺', tone: 'good' });
     } else if (o.id === 'cekmece') {
       var q = Math.min(o.q, Math.floor(G.space()));
       G.S.stock += q; G.S.stats.bought += q;
-      G.emit('log', { text: '🗄️ ' + G.fmt(q) + ' bedava telefon depoya girdi', tone: 'good' });
+      G.emit('log', { text: '' + G.fmt(q) + ' bedava telefon depoya girdi', tone: 'good' });
     } else if (o.id === 'nurten') {
       var v = G.S.cash * o.pct / 100;
       G.S.cash += v; G.S.stats.earned += v; G.S.stats.earnedAll += v;
       G.S.cd.nurten = G.S.t + 1800; G.S.nextOffer = G.S.t + 1800;
-      G.emit('log', { text: '🧮 Nurten Abla\'nın yatırımı tuttu: +' + G.fmt(v) + ' ₺', tone: 'good' });
+      G.emit('log', { text: 'Nurten Abla\'nın yatırımı tuttu: +' + G.fmt(v) + ' ₺', tone: 'good' });
     }
     G.emit('offerDone', o);
     return true;
@@ -499,7 +499,7 @@
     }
     if (S.crew.nurten && !G.offer && S.t >= S.nextOffer && (S.cd.nurten || 0) <= S.t) {
       var pct = 1 + Math.floor(Math.random() * 10);
-      G.offer = { id: 'nurten', until: S.t + 30, dur: 30, pct: pct, title: '🧮 Nurten Abla\'nın teklifi',
+      G.offer = { id: 'nurten', until: S.t + 30, dur: 30, pct: pct, title: 'Nurten Abla\'nın teklifi',
         text: 'Kasadaki paranın %' + pct + '\'i kadar getiri garanti. Kabul edersen 30 dk yeni teklif yok.', btn: 'Kabul' };
       S.nextOffer = S.t + 300;
       G.emit('offer', G.offer);
