@@ -22,6 +22,22 @@
       if (saved.stats) ['earned', 'earnedAll', 'spent'].forEach(function (k) { saved.stats[k] = (saved.stats[k] || 0) * K; });
       saved.v = 2;
     }
+    // v3: tedarikte 4. sıraya Market Vendörlüğü girdi; eski 4 ve sonrası bir kaydı.
+    if (saved.v < 3) {
+      var at = 4, shift = function (obj, re) {
+        if (!obj) return obj;
+        var out = {};
+        Object.keys(obj).forEach(function (k) {
+          var m = re.exec(k);
+          out[m && +m[1] >= at ? k.replace(re, function (_, i, rest) { return 's' + (+i + 1) + (rest || ''); }) : k] = obj[k];
+        });
+        return out;
+      };
+      if (Array.isArray(saved.sup)) saved.sup.splice(at, 0, 0);
+      saved.upg = shift(saved.upg, /^s(\d+)(_\d+)$/);
+      saved.retired = shift(saved.retired, /^s(\d+)()$/);
+      saved.v = 3;
+    }
     return saved;
   }
 

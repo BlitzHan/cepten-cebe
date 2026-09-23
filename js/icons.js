@@ -7,6 +7,7 @@
     ilan:     '<rect x="3" y="3" width="12" height="15" rx="1.5"/><path d="M6 7h6M6 10.5h4"/><circle cx="15.5" cy="15.5" r="3.5"/><path d="m18 18 3 3"/>',
     geri:     '<rect x="8.5" y="6" width="7" height="12" rx="1.5"/><path d="M4 12a8 8 0 0 1 13-6.2"/><path d="m17 3 .3 3-3 .3"/><path d="M20 12a8 8 0 0 1-13 6.2"/><path d="m7 21-.3-3 3-.3"/>',
     toptanci: '<path d="M3 8 12 4l9 4v9l-9 4-9-4z"/><path d="m3 8 9 4 9-4M12 12v9"/><path d="m7.5 6 9 4"/>',
+    vendor:   '<path d="M3 9 5 4h14l2 5"/><path d="M4 9v11h16V9"/><path d="M3 9h18"/><path d="M15 15H9m0 0 2-2m-2 2 2 2"/>',
     ithalat:  '<path d="M3 15h18l-2.5 5h-13z"/><path d="M6 15V9h5v6M11 11h6v4"/><path d="M8 9V6"/>',
     atolye:   '<path d="M14.5 6.5a3.5 3.5 0 0 0-4.6 4.6L4 17l3 3 5.9-5.9a3.5 3.5 0 0 0 4.6-4.6l-2.1 2.1-2-2z"/>',
     fabrika:  '<path d="M3 21V11l5 3v-3l5 3v-3l5 3V4h3v17z"/><path d="M7 18h2M12 18h2"/>',

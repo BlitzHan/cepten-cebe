@@ -40,6 +40,7 @@ G.D = {
     { id: 'ilan',     icon: '🔎', name: 'İlan Avcısı',         rate: 0.5,   mult: 0.92, cost: 38000,  desc: 'İkinci el ilanlarını gece gündüz tarar.' },
     { id: 'geri',     icon: '🔁', name: 'Geri Alım Tezgâhı',   rate: 2,     mult: 0.88, cost: 380000, desc: 'Müşterinin eskisini alır, yenisine sayar.' },
     { id: 'toptanci', icon: '📦', name: 'Toptancı Anlaşması',  rate: 8,    mult: 0.84, cost: 3.8e6, desc: 'Koli koli mal, peşin para.' },
+    { id: 'vendor',   icon: '🏬', name: 'Market Vendörlüğü',   rate: 16,    mult: 0.81, cost: 1.2e7, desc: 'Elektronik marketler yeni cihaz satarken eskisini geri alır, hepsini sana yollar.' },
     { id: 'ithalat',  icon: '🚢', name: 'İthalat Hattı',       rate: 35,    mult: 0.78, cost: 4.1e7, desc: 'Konteyner başına telefon. Gümrüğe dikkat.' },
     { id: 'atolye',   icon: '🔧', name: 'Montaj Atölyesi',     rate: 160,   mult: 0.65, cost: 4.7e8,   desc: 'Parçayı alıp kendin topluyorsun. Maliyet düşüyor.' },
     { id: 'fabrika',  icon: '🏭', name: 'Fabrika',             rate: 800,  mult: 0.55, cost: 5.9e9,   desc: 'Kendi markan, kendi bandın.' },
@@ -62,6 +63,12 @@ G.D = {
 
   // Tecrübeye çevir (Dr. Meth'teki işçi feda etme): o türden `need` birim kapatılır,
   // para iadesi yok, kalıcı +gain kondisyon. Her tür için turda bir kez. Sıra kademe sırasıdır.
+  // Tedarikte bir kademe fazla (Market Vendörlüğü), onun için ayrı tablo.
+  RETIRE_S: [
+    { need: 50, gain: 0.03 }, { need: 50, gain: 0.03 }, { need: 40, gain: 0.04 },
+    { need: 40, gain: 0.04 }, { need: 35, gain: 0.045 }, { need: 30, gain: 0.05 }, { need: 30, gain: 0.05 },
+    { need: 25, gain: 0.06 }, { need: 20, gain: 0.06 }, { need: 15, gain: 0.07 }
+  ],
   RETIRE: [
     { need: 50, gain: 0.03 }, { need: 50, gain: 0.03 }, { need: 40, gain: 0.04 },
     { need: 40, gain: 0.04 }, { need: 30, gain: 0.05 }, { need: 30, gain: 0.05 },

@@ -14,7 +14,7 @@
   // ---------- durum ----------
   G.newState = function (keep) {
     var S = {
-      v: 2, cash: D.START_CASH, stock: 0, cond: D.START_COND, era: 0, depot: 0,
+      v: 3, cash: D.START_CASH, stock: 0, cond: D.START_COND, era: 0, depot: 0,
       sup: D.SUPPLIERS.map(function () { return 0; }),
       chan: D.CHANNELS.map(function () { return 0; }),
       upg: {}, crew: {}, ach: {}, buffs: {}, cd: {}, retired: {},
@@ -123,6 +123,11 @@
   };
 
   // ---------- birim alım/satım ----------
+  G.own = function (kind, id) {
+    var L = kind === 's' ? D.SUPPLIERS : D.CHANNELS;
+    for (var i = 0; i < L.length; i++) if (L[i].id === id) return (kind === 's' ? G.S.sup : G.S.chan)[i];
+    return 0;
+  };
   function list(kind) { return kind === 's' ? D.SUPPLIERS : D.CHANNELS; }
   function owned(kind) { return kind === 's' ? G.S.sup : G.S.chan; }
   G.unitCost = function (kind, i, m) {
@@ -164,7 +169,7 @@
   };
 
   G.retireInfo = function (kind, i) {
-    var r = D.RETIRE[i], done = !!G.S.retired[kind + i];
+    var r = (kind === 's' ? D.RETIRE_S : D.RETIRE)[i], done = !!G.S.retired[kind + i];
     return { need: r.need, gain: r.gain, done: done, ready: !done && owned(kind)[i] >= r.need };
   };
   G.retire = function (kind, i) {
@@ -458,7 +463,7 @@
       G.addBuff('kur', 90);
       G.emit('log', { text: 'Kur zıpladı! 90 sn alış +%20, satış +%30. Stok varsa şimdi sat.', tone: 'warn', big: true });
     } },
-    { id: 'gumruk', w: 1, ok: function () { return G.S.sup[4] > 0; }, fire: function () {
+    { id: 'gumruk', w: 1, ok: function () { return G.own('s', 'ithalat') > 0; }, fire: function () {
       G.addBuff('gumruk', 60, true);
       G.emit('log', { text: 'Konteyner gümrükte takıldı. İthalat Hattı ' + G.fmtTime(G.buffLeft('gumruk')) + ' durdu.', tone: 'bad', big: true });
     } },
@@ -514,7 +519,7 @@
     { id: 'esnaf',    icon: '🏪', name: 'Esnaf Oldun',             desc: 'İlk Mahalle Dükkânını aç.',              ok: function (S) { return S.chan[2] >= 1; } },
     { id: 'toptan',   icon: '📲', name: 'Toptancının Gözdesi',     desc: '50 Telefoncuya Toptan kanalın olsun.',   ok: function (S) { return S.chan[1] >= 50; } },
     { id: 'avm',      icon: '🏬', name: 'AVM Kralı',               desc: '10 AVM Mağazası.',                       ok: function (S) { return S.chan[4] >= 10; } },
-    { id: 'fabrika',  icon: '🏭', name: 'Fabrikatör',              desc: 'İlk Fabrikanı kur.',                     ok: function (S) { return S.sup[6] >= 1; } },
+    { id: 'fabrika',  icon: '🏭', name: 'Fabrikatör',              desc: 'İlk Fabrikanı kur.',                     ok: function (S) { return G.own('s', 'fabrika') >= 1; } },
     { id: 'mars',     icon: '🚀', name: 'Gökyüzü Sınır Değil',     desc: 'Mars Bayiliği al.',                      ok: function (S) { return S.chan[8] >= 1; } },
     { id: 'birim100', icon: '👥', name: 'Kalabalık Kadro',         desc: 'Toplam 100 birime sahip ol.',            ok: function (S) { return sumArr(S.sup) + sumArr(S.chan) >= 100; } },
     { id: 'birim500', icon: '🏙️', name: 'Holding Gibi Holding',    desc: 'Toplam 500 birime sahip ol.',            ok: function (S) { return sumArr(S.sup) + sumArr(S.chan) >= 500; } },
