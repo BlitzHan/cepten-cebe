@@ -8,7 +8,9 @@ Hedef adres: `https://blitzhan.github.io/cepten-cebe/`
 > - Üst kademe birimler kademe başına ×1,5 daha pahalı.
 > - Halka arz eşiği bu turda 30 Mr ₺ ciro.
 >
-> Sonuç: bot yaklaşık 20 dk'da Mahalle Dükkânı'na, 1 saatte AVM'ye, 1,5–1,7 saatte halka arza ulaşıyor. Güncel sayılar her zaman `js/data.js` içinde.
+> - **Gerçekçi fiyatlar (sonradan):** tüm para değerleri ×7,5 büyütüldü. Çağ alış/satış fiyatları: tuşlu 750/1.000, kapaklı 2.000/2.600, dokunmatik 5.000/6.500, akıllı 18.000/23.500, amiral gemisi 65.000/85.000, katlanır 110.000/145.000 ₺. Başlangıç nakiti 7.500 ₺, halka arz eşiği 225 Mr ₺. Eski kayıtlar otomatik dönüştürülür (kayıt sürümü 2).
+>
+> Sonuç: bot yaklaşık 20 dk'da Mahalle Dükkânı'na, 1 saatte AVM'ye, yaklaşık 1,7 saatte halka arza ulaşıyor. Güncel sayılar her zaman `js/data.js` içinde.
 
 ---
 

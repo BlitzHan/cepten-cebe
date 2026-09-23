@@ -14,6 +14,17 @@
     return base;
   }
 
+  // v1 kayıtları eski fiyat ölçeğindeydi (tuşlu 100 ₺). Para değerlerini yeni ölçeğe taşı.
+  function migrate(saved) {
+    if (!saved.v || saved.v < 2) {
+      var K = 7.5;
+      saved.cash = (saved.cash || 0) * K;
+      if (saved.stats) ['earned', 'earnedAll', 'spent'].forEach(function (k) { saved.stats[k] = (saved.stats[k] || 0) * K; });
+      saved.v = 2;
+    }
+    return saved;
+  }
+
   G.save = function () {
     G.S.lastSave = Date.now();
     try { localStorage.setItem(KEY, JSON.stringify(G.S)); return true; } catch (e) { return false; }
@@ -24,7 +35,7 @@
     try { raw = localStorage.getItem(KEY); } catch (e) { return null; }
     if (!raw) return null;
     try {
-      var saved = JSON.parse(raw);
+      var saved = migrate(JSON.parse(raw));
       G.S = merge(G.newState(), saved);
       return (Date.now() - (saved.lastSave || Date.now())) / 1000;
     } catch (e) { return null; }
@@ -39,7 +50,7 @@
     try {
       var saved = JSON.parse(decodeURIComponent(escape(atob(str.trim()))));
       if (typeof saved.cash !== 'number' || !Array.isArray(saved.sup)) return false;
-      G.S = merge(G.newState(), saved);
+      G.S = merge(G.newState(), migrate(saved));
       G.S.lastSave = Date.now();
       G.offer = null;
       G.save();

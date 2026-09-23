@@ -150,7 +150,7 @@
       h += '<div class="row feature' + (eOk ? ' lit' : '') + '">' +
         '<div class="row-ico">' + G.ART.phone(S.era + 1) + '</div>' +
         '<div class="row-body"><div class="row-name">' + e.name + ' çağına geç</div>' +
-        '<div class="row-desc">Alış ' + tl(e.buy) + ', temel satış ' + tl(e.sell) + ' olur. Telefon başına kâr yaklaşık ×3.</div></div>' +
+        '<div class="row-desc">Alış ' + tl(e.buy) + ', temel satış ' + tl(e.sell) + ' olur. Telefon başı kâr yaklaşık ×' + ((e.sell - e.buy) / (G.era().sell - G.era().buy)).toFixed(1).replace('.', ',') + '.</div></div>' +
         '<div class="row-count"></div>' +
         '<div class="row-act"><button class="btn red" data-act="era"' + (eOk ? '' : ' disabled') + '><small>Çağ atla</small><b>' + tl(e.cost) + '</b></button></div></div>';
     } else h += '<p class="hint">Son çağdasın. Buradan sonrası uzay.</p>';

@@ -14,7 +14,7 @@
   // ---------- durum ----------
   G.newState = function (keep) {
     var S = {
-      v: 1, cash: D.START_CASH, stock: 0, cond: D.START_COND, era: 0, depot: 0,
+      v: 2, cash: D.START_CASH, stock: 0, cond: D.START_COND, era: 0, depot: 0,
       sup: D.SUPPLIERS.map(function () { return 0; }),
       chan: D.CHANNELS.map(function () { return 0; }),
       upg: {}, crew: {}, ach: {}, buffs: {}, cd: {}, retired: {},
@@ -371,7 +371,7 @@
       a.eta = pr > 0 ? (a.rec.cost - S.cash) / pr : null;
     }
     var e = G.nextEra();
-    if (e && S.cash >= e.cost) a.extra = e.name + ' çağına geçebilirsin: telefon başına kâr ×3.';
+    if (e && S.cash >= e.cost) a.extra = e.name + ' çağına geçebilirsin: telefon başı kâr ×' + ((e.sell - e.buy) / (G.era().sell - G.era().buy)).toFixed(1).replace('.', ',') + '.';
     return a;
   };
 
@@ -460,7 +460,7 @@
     { id: 'garanti',  icon: '🧾', name: '"Garantisi var mı abi?"', desc: '100 telefon sat.',                       ok: function (S) { return S.stats.sold >= 100; } },
     { id: 'bin',      icon: '📱', name: 'Bin Cep',                 desc: '1.000 telefon sat.',                     ok: function (S) { return S.stats.sold >= 1000; } },
     { id: 'milyoncep',icon: '📡', name: 'Operatör Gibi',           desc: '1 milyon telefon sat.',                  ok: function (S) { return S.stats.sold >= 1e6; } },
-    { id: 'harclik',  icon: '🪙', name: 'Harçlık Çıktı',           desc: 'Toplam 10.000 ₺ kazan.',                 ok: function (S) { return S.stats.earnedAll >= 1e4; } },
+    { id: 'harclik',  icon: '🪙', name: 'Harçlık Çıktı',           desc: 'Toplam 100.000 ₺ kazan.',                ok: function (S) { return S.stats.earnedAll >= 1e5; } },
     { id: 'milyoner', icon: '💰', name: 'Milyoner',                desc: 'Toplam 1 milyon ₺ kazan.',               ok: function (S) { return S.stats.earnedAll >= 1e6; } },
     { id: 'milyarder',icon: '🏦', name: 'Milyarder',               desc: 'Toplam 1 milyar ₺ kazan.',               ok: function (S) { return S.stats.earnedAll >= 1e9; } },
     { id: 'trilyoner',icon: '👑', name: 'Trilyoner',               desc: 'Toplam 1 trilyon ₺ kazan.',              ok: function (S) { return S.stats.earnedAll >= 1e12; } },

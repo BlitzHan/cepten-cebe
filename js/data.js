@@ -2,12 +2,12 @@
 var G = globalThis.G = globalThis.G || {};
 
 G.D = {
-  START_CASH: 1000,
+  START_CASH: 7500,
   START_COND: 0.5,
   COST_GROWTH: 1.15,
   REFUND: 0.5,
-  IPO_MIN: 3e10,         // halka arz için bu turda kazanılması gereken
-  SHARE_UNIT: 1e9,       // hisse = floor(sqrt(toplam kazanç / SHARE_UNIT))
+  IPO_MIN: 2.25e11,         // halka arz için bu turda kazanılması gereken
+  SHARE_UNIT: 7.5e9,       // hisse = floor(sqrt(toplam kazanç / SHARE_UNIT))
   SHARE_BONUS: 0.02,     // hisse başına otomatik hız bonusu
   ACH_BONUS: 0.01,       // başarım başına otomatik hız bonusu
   OFFLINE_EFF: 0.5,
@@ -15,12 +15,12 @@ G.D = {
 
   // Telefon çağları: alış/satış temel fiyatı. cost = çağ atlama bedeli (nakit)
   ERAS: [
-    { id: 'tuslu',      name: 'Tuşlu Telefon',     buy: 100,    sell: 130,    cost: 0 },
-    { id: 'kapakli',    name: 'Kapaklı Telefon',   buy: 300,    sell: 390,    cost: 1e5 },
-    { id: 'dokunmatik', name: 'İlk Dokunmatik',    buy: 900,   sell: 1170,   cost: 3e7 },
-    { id: 'akilli',     name: 'Akıllı Telefon',    buy: 2700,  sell: 3510,  cost: 9e9 },
-    { id: 'amiral',     name: 'Amiral Gemisi',     buy: 8100,  sell: 10530,  cost: 2.7e12 },
-    { id: 'katlanir',   name: 'Katlanır Telefon',  buy: 24300, sell: 31590, cost: 8.1e14 }
+    { id: 'tuslu',      name: 'Tuşlu Telefon',     buy: 750,    sell: 1000,    cost: 0 },
+    { id: 'kapakli',    name: 'Kapaklı Telefon',   buy: 2000,    sell: 2600,    cost: 7.5e5 },
+    { id: 'dokunmatik', name: 'İlk Dokunmatik',    buy: 5000,   sell: 6500,   cost: 2.25e8 },
+    { id: 'akilli',     name: 'Akıllı Telefon',    buy: 18000,  sell: 23500,  cost: 6.8e10 },
+    { id: 'amiral',     name: 'Amiral Gemisi',     buy: 65000,  sell: 85000,  cost: 2e13 },
+    { id: 'katlanir',   name: 'Katlanır Telefon',  buy: 110000, sell: 145000, cost: 6.1e15 }
   ],
 
   GRADES: [
@@ -36,28 +36,28 @@ G.D = {
 
   // Tedarik: saniyede telefon ALIR. mult = alış fiyatı çarpanı (düşük = ucuz)
   SUPPLIERS: [
-    { id: 'kuzen',    icon: '🧒', name: 'Kuzen Mert',          rate: 0.1,   mult: 0.90, cost: 200,   desc: 'Akrabaların çekmecelerindeki eski telefonları toplar.' },
-    { id: 'ilan',     icon: '🔎', name: 'İlan Avcısı',         rate: 0.5,   mult: 0.95, cost: 3500,  desc: 'İkinci el ilanlarını gece gündüz tarar.' },
-    { id: 'geri',     icon: '🔁', name: 'Geri Alım Tezgâhı',   rate: 2,     mult: 0.85, cost: 50000, desc: 'Müşterinin eskisini alır, yenisine sayar.' },
-    { id: 'toptanci', icon: '📦', name: 'Toptancı Anlaşması',  rate: 8,    mult: 0.90, cost: 1.8e6, desc: 'Koli koli mal, peşin para.' },
-    { id: 'ithalat',  icon: '🚢', name: 'İthalat Hattı',       rate: 35,    mult: 0.80, cost: 3.9e7, desc: 'Konteyner başına telefon. Gümrüğe dikkat.' },
-    { id: 'atolye',   icon: '🔧', name: 'Montaj Atölyesi',     rate: 160,   mult: 0.60, cost: 1.1e9,   desc: 'Parçayı alıp kendin topluyorsun. Maliyet düşüyor.' },
-    { id: 'fabrika',  icon: '🏭', name: 'Fabrika',             rate: 800,  mult: 0.50, cost: 3.7e10,   desc: 'Kendi markan, kendi bandın.' },
-    { id: 'mega',     icon: '🏗️', name: 'Mega Fabrika',        rate: 4000,   mult: 0.40, cost: 1.3e12,   desc: 'Üç vardiya, robot kollar.' },
-    { id: 'yorunge',  icon: '🛰️', name: 'Yörünge Fabrikası',   rate: 22000,   mult: 0.30, cost: 5e13,  desc: 'Sıfır yerçekiminde kusursuz lehim.' }
+    { id: 'kuzen',    icon: '🧒', name: 'Kuzen Mert',          rate: 0.1,   mult: 0.90, cost: 1500,   desc: 'Akrabaların çekmecelerindeki eski telefonları toplar.' },
+    { id: 'ilan',     icon: '🔎', name: 'İlan Avcısı',         rate: 0.5,   mult: 0.95, cost: 26000,  desc: 'İkinci el ilanlarını gece gündüz tarar.' },
+    { id: 'geri',     icon: '🔁', name: 'Geri Alım Tezgâhı',   rate: 2,     mult: 0.85, cost: 380000, desc: 'Müşterinin eskisini alır, yenisine sayar.' },
+    { id: 'toptanci', icon: '📦', name: 'Toptancı Anlaşması',  rate: 8,    mult: 0.90, cost: 1.4e7, desc: 'Koli koli mal, peşin para.' },
+    { id: 'ithalat',  icon: '🚢', name: 'İthalat Hattı',       rate: 35,    mult: 0.80, cost: 2.9e8, desc: 'Konteyner başına telefon. Gümrüğe dikkat.' },
+    { id: 'atolye',   icon: '🔧', name: 'Montaj Atölyesi',     rate: 160,   mult: 0.60, cost: 8.2e9,   desc: 'Parçayı alıp kendin topluyorsun. Maliyet düşüyor.' },
+    { id: 'fabrika',  icon: '🏭', name: 'Fabrika',             rate: 800,  mult: 0.50, cost: 2.8e11,   desc: 'Kendi markan, kendi bandın.' },
+    { id: 'mega',     icon: '🏗️', name: 'Mega Fabrika',        rate: 4000,   mult: 0.40, cost: 9.8e12,   desc: 'Üç vardiya, robot kollar.' },
+    { id: 'yorunge',  icon: '🛰️', name: 'Yörünge Fabrikası',   rate: 22000,   mult: 0.30, cost: 3.8e14,  desc: 'Sıfır yerçekiminde kusursuz lehim.' }
   ],
 
   // Satış kanalları: saniyede telefon SATAR. mult = satış fiyatı çarpanı (yüksek = kârlı)
   CHANNELS: [
-    { id: 'elden',     icon: '🤝', name: 'Elden Satış',        rate: 0.1,   mult: 1.10, cost: 200,   desc: 'WhatsApp durumuna "satılık" yazdın.' },
-    { id: 'telefoncu', icon: '📲', name: 'Telefoncuya Toptan', rate: 1,   mult: 0.85, cost: 2900,  desc: 'Hızlı gider ama pazarlıkta kaybedersin.' },
-    { id: 'mahalle',   icon: '🏪', name: 'Mahalle Dükkânı',    rate: 2,     mult: 1.00, cost: 35000, desc: 'Kepenk senin, tabela senin.' },
-    { id: 'carsi',     icon: '🛍️', name: 'Çarşı Mağazası',     rate: 8,    mult: 1.05, cost: 1.5e6, desc: 'Ana caddede vitrin.' },
-    { id: 'avm',       icon: '🏬', name: 'AVM Mağazası',       rate: 35,    mult: 1.20, cost: 3.9e7, desc: 'Kira yüksek, müşteri cüzdanı dolu.' },
-    { id: 'online',    icon: '🌐', name: 'Online Mağaza',      rate: 160,   mult: 1.00, cost: 9.9e8, desc: 'Gece 3\'te bile sipariş düşer.' },
-    { id: 'zincir',    icon: '🏢', name: 'Zincir Marka',       rate: 800,  mult: 1.15, cost: 3.3e10, desc: 'Her ilde bir şube.' },
-    { id: 'ihracat',   icon: '✈️', name: 'İhracat',            rate: 4000,  mult: 0.95, cost: 1.1e12,   desc: 'Kargo uçağı dolusu telefon.' },
-    { id: 'mars',      icon: '🚀', name: 'Mars Bayiliği',      rate: 22000,   mult: 1.50, cost: 4.7e13,  desc: 'Kızıl gezegende tek yetkili satıcı.' }
+    { id: 'elden',     icon: '🤝', name: 'Elden Satış',        rate: 0.1,   mult: 1.10, cost: 1500,   desc: 'WhatsApp durumuna "satılık" yazdın.' },
+    { id: 'telefoncu', icon: '📲', name: 'Telefoncuya Toptan', rate: 1,   mult: 0.85, cost: 22000,  desc: 'Hızlı gider ama pazarlıkta kaybedersin.' },
+    { id: 'mahalle',   icon: '🏪', name: 'Mahalle Dükkânı',    rate: 2,     mult: 1.00, cost: 260000, desc: 'Kepenk senin, tabela senin.' },
+    { id: 'carsi',     icon: '🛍️', name: 'Çarşı Mağazası',     rate: 8,    mult: 1.05, cost: 1.1e7, desc: 'Ana caddede vitrin.' },
+    { id: 'avm',       icon: '🏬', name: 'AVM Mağazası',       rate: 35,    mult: 1.20, cost: 2.9e8, desc: 'Kira yüksek, müşteri cüzdanı dolu.' },
+    { id: 'online',    icon: '🌐', name: 'Online Mağaza',      rate: 160,   mult: 1.00, cost: 7.4e9, desc: 'Gece 3\'te bile sipariş düşer.' },
+    { id: 'zincir',    icon: '🏢', name: 'Zincir Marka',       rate: 800,  mult: 1.15, cost: 2.5e11, desc: 'Her ilde bir şube.' },
+    { id: 'ihracat',   icon: '✈️', name: 'İhracat',            rate: 4000,  mult: 0.95, cost: 8.2e12,   desc: 'Kargo uçağı dolusu telefon.' },
+    { id: 'mars',      icon: '🚀', name: 'Mars Bayiliği',      rate: 22000,   mult: 1.50, cost: 3.5e14,  desc: 'Kızıl gezegende tek yetkili satıcı.' }
   ],
 
   // Tecrübeye çevir (Dr. Meth'teki işçi feda etme): o türden `need` birim kapatılır,
@@ -70,11 +70,11 @@ G.D = {
 
   DEPOTS: [
     { name: 'Dolap',            cap: 50,  cost: 0 },
-    { name: 'Oda',              cap: 500, cost: 12000 },
-    { name: 'Depo',             cap: 5e3, cost: 3.9e5 },
-    { name: 'Lojistik Merkezi', cap: 1e5, cost: 7.8e7 },
-    { name: 'Liman Antreposu',  cap: 5e6, cost: 2e10 },
-    { name: 'Yörünge Deposu',   cap: 1e9, cost: 7.8e12 }
+    { name: 'Oda',              cap: 500, cost: 90000 },
+    { name: 'Depo',             cap: 5e3, cost: 2.9e6 },
+    { name: 'Lojistik Merkezi', cap: 1e5, cost: 5.8e8 },
+    { name: 'Liman Antreposu',  cap: 5e6, cost: 1.5e11 },
+    { name: 'Yörünge Deposu',   cap: 1e9, cost: 5.8e13 }
   ],
 
   // Birim katlayıcıları: o birimden şu kadar olunca açılır, hızını ×2 yapar
@@ -87,32 +87,32 @@ G.D = {
   ],
 
   CLICK_TIERS: [
-    { p: 2,    cost: 1600,   name: 'Çift El',   desc: 'Tıklama başına 2 telefon.' },
-    { p: 5,    cost: 23000,  name: 'Poşet',     desc: 'Tıklama başına 5 telefon.' },
-    { p: 20,   cost: 5.9e5, name: 'Koli',      desc: 'Tıklama başına 20 telefon.' },
-    { p: 100,  cost: 3.1e7,   name: 'Palet',     desc: 'Tıklama başına 100 telefon.' },
-    { p: 500,  cost: 3.1e9,  name: 'Kamyonet',  desc: 'Tıklama başına 500 telefon.' },
-    { p: 3000, cost: 3.1e11,  name: 'Tır',       desc: 'Tıklama başına 3.000 telefon.' }
+    { p: 2,    cost: 12000,   name: 'Çift El',   desc: 'Tıklama başına 2 telefon.' },
+    { p: 5,    cost: 170000,  name: 'Poşet',     desc: 'Tıklama başına 5 telefon.' },
+    { p: 20,   cost: 4.4e6, name: 'Koli',      desc: 'Tıklama başına 20 telefon.' },
+    { p: 100,  cost: 2.3e8,   name: 'Palet',     desc: 'Tıklama başına 100 telefon.' },
+    { p: 500,  cost: 2.3e10,  name: 'Kamyonet',  desc: 'Tıklama başına 500 telefon.' },
+    { p: 3000, cost: 2.3e12,  name: 'Tır',       desc: 'Tıklama başına 3.000 telefon.' }
   ],
 
   // Genel nakit yükseltmeleri
   GLOBAL_UPS: [
-    { id: 'pazarlik0', cost: 78000,   name: 'Pazarlık Ustası',     desc: 'Tüm alışlar %5 ucuz.',                 eff: { buy: 0.95 } },
-    { id: 'guler0',    cost: 2e5,   name: 'Güler Yüz',           desc: 'Satış fiyatı ×1,1.',                   eff: { sell: 1.1 } },
-    { id: 'reklam0',   cost: 3.9e5,   name: 'Afiş Kampanyası',     desc: 'Tüm satış kanalları %50 hızlı.',       eff: { chan: 1.5 } },
-    { id: 'ag0',       cost: 3.9e5,   name: 'Tedarik Ağı',         desc: 'Tüm tedarik %50 hızlı.',               eff: { sup: 1.5 } },
-    { id: 'pazarlik1', cost: 7.8e6,   name: 'Sert Pazarlık',       desc: 'Tüm alışlar %5 daha ucuz.',            eff: { buy: 0.95 } },
-    { id: 'guler1',    cost: 2e7,   name: 'Garanti Belgesi',     desc: 'Satış fiyatı ×1,1.',                   eff: { sell: 1.1 } },
-    { id: 'kasaSesi',  cost: 3.9e7,   name: 'Kasa Sesi',           desc: 'Tıklamalar otomatik hızın %3\'ü kadar ek iş yapar.', eff: {} },
-    { id: 'reklam1',   cost: 3.9e7,   name: 'TV Reklamı',          desc: 'Tüm satış kanalları %50 hızlı.',       eff: { chan: 1.5 } },
-    { id: 'ag1',       cost: 3.9e7,   name: 'Lojistik Anlaşması',  desc: 'Tüm tedarik %50 hızlı.',               eff: { sup: 1.5 } },
-    { id: 'pazarlik2', cost: 7.8e8,   name: 'Tekel Gücü',          desc: 'Tüm alışlar %5 daha ucuz.',            eff: { buy: 0.95 } },
-    { id: 'guler2',    cost: 2e9,   name: 'Marka Değeri',        desc: 'Satış fiyatı ×1,1.',                   eff: { sell: 1.1 } },
-    { id: 'reklam2',   cost: 3.9e9,   name: 'Ünlü Yüz',            desc: 'Tüm satış kanalları %50 hızlı.',       eff: { chan: 1.5 } },
-    { id: 'ag2',       cost: 3.9e9,   name: 'Küresel Tedarik',     desc: 'Tüm tedarik %50 hızlı.',               eff: { sup: 1.5 } },
-    { id: 'guler3',    cost: 2e11,  name: 'Efsane Marka',        desc: 'Satış fiyatı ×1,15.',                  eff: { sell: 1.15 } },
-    { id: 'reklam3',   cost: 3.9e11,  name: 'Galaktik Reklam',     desc: 'Tüm satış kanalları ×2.',              eff: { chan: 2 } },
-    { id: 'ag3',       cost: 3.9e11,  name: 'Işık Hızında Kargo',  desc: 'Tüm tedarik ×2.',                      eff: { sup: 2 } }
+    { id: 'pazarlik0', cost: 580000,   name: 'Pazarlık Ustası',     desc: 'Tüm alışlar %5 ucuz.',                 eff: { buy: 0.95 } },
+    { id: 'guler0',    cost: 1.5e6,   name: 'Güler Yüz',           desc: 'Satış fiyatı ×1,1.',                   eff: { sell: 1.1 } },
+    { id: 'reklam0',   cost: 2.9e6,   name: 'Afiş Kampanyası',     desc: 'Tüm satış kanalları %50 hızlı.',       eff: { chan: 1.5 } },
+    { id: 'ag0',       cost: 2.9e6,   name: 'Tedarik Ağı',         desc: 'Tüm tedarik %50 hızlı.',               eff: { sup: 1.5 } },
+    { id: 'pazarlik1', cost: 5.8e7,   name: 'Sert Pazarlık',       desc: 'Tüm alışlar %5 daha ucuz.',            eff: { buy: 0.95 } },
+    { id: 'guler1',    cost: 1.5e8,   name: 'Garanti Belgesi',     desc: 'Satış fiyatı ×1,1.',                   eff: { sell: 1.1 } },
+    { id: 'kasaSesi',  cost: 2.9e8,   name: 'Kasa Sesi',           desc: 'Tıklamalar otomatik hızın %3\'ü kadar ek iş yapar.', eff: {} },
+    { id: 'reklam1',   cost: 2.9e8,   name: 'TV Reklamı',          desc: 'Tüm satış kanalları %50 hızlı.',       eff: { chan: 1.5 } },
+    { id: 'ag1',       cost: 2.9e8,   name: 'Lojistik Anlaşması',  desc: 'Tüm tedarik %50 hızlı.',               eff: { sup: 1.5 } },
+    { id: 'pazarlik2', cost: 5.8e9,   name: 'Tekel Gücü',          desc: 'Tüm alışlar %5 daha ucuz.',            eff: { buy: 0.95 } },
+    { id: 'guler2',    cost: 1.5e10,   name: 'Marka Değeri',        desc: 'Satış fiyatı ×1,1.',                   eff: { sell: 1.1 } },
+    { id: 'reklam2',   cost: 2.9e10,   name: 'Ünlü Yüz',            desc: 'Tüm satış kanalları %50 hızlı.',       eff: { chan: 1.5 } },
+    { id: 'ag2',       cost: 2.9e10,   name: 'Küresel Tedarik',     desc: 'Tüm tedarik %50 hızlı.',               eff: { sup: 1.5 } },
+    { id: 'guler3',    cost: 1.5e12,  name: 'Efsane Marka',        desc: 'Satış fiyatı ×1,15.',                  eff: { sell: 1.15 } },
+    { id: 'reklam3',   cost: 2.9e12,  name: 'Galaktik Reklam',     desc: 'Tüm satış kanalları ×2.',              eff: { chan: 2 } },
+    { id: 'ag3',       cost: 2.9e12,  name: 'Işık Hızında Kargo',  desc: 'Tüm tedarik ×2.',                      eff: { sup: 2 } }
   ],
 
   // "Parça için sök": stoktaki telefonlarla ödenir, şansa bağlı, kondisyonu artırır
@@ -130,12 +130,12 @@ G.D = {
   ],
 
   CREW: [
-    { id: 'mudur',  icon: '👔', name: 'Mağaza Müdürü',          cost: 31000,  desc: '×10 ve Maks alım, "Hepsini Al" ve "Hepsini Sat" butonları.' },
-    { id: 'hakan',  icon: '🛠️', name: 'Usta Teknisyen Hakan',   cost: 2.3e5,   desc: 'Hızlı tıklama kombosu kondisyonu geçici artırır (en çok +%25).' },
-    { id: 'nurten', icon: '🧮', name: 'Muhasebeci Nurten Abla', cost: 2e6,   desc: '5 dakikada bir %1–10 getirili yatırım teklifi. Kabul edince 30 dk bekler.' },
-    { id: 'can',    icon: '📣', name: 'Pazarlamacı Can',        cost: 2e7,   desc: '"Kampanya" butonu: 30 sn satış fiyatı ×2. 10 dk bekleme.' },
-    { id: 'selin',  icon: '🧑‍💼', name: 'İK\'cı Selin',          cost: 2e8,   desc: 'Her 3 saniyede en ucuz satış kanalına bedava personel ekler.' },
-    { id: 'deniz',  icon: '⚖️', name: 'Avukat Deniz',           cost: 2e9,   desc: 'Olumsuz olayların süresi yarıya iner.' }
+    { id: 'mudur',  icon: '👔', name: 'Mağaza Müdürü',          cost: 230000,  desc: '×10 ve Maks alım, "Hepsini Al" ve "Hepsini Sat" butonları.' },
+    { id: 'hakan',  icon: '🛠️', name: 'Usta Teknisyen Hakan',   cost: 1.7e6,   desc: 'Hızlı tıklama kombosu kondisyonu geçici artırır (en çok +%25).' },
+    { id: 'nurten', icon: '🧮', name: 'Muhasebeci Nurten Abla', cost: 1.5e7,   desc: '5 dakikada bir %1–10 getirili yatırım teklifi. Kabul edince 30 dk bekler.' },
+    { id: 'can',    icon: '📣', name: 'Pazarlamacı Can',        cost: 1.5e8,   desc: '"Kampanya" butonu: 30 sn satış fiyatı ×2. 10 dk bekleme.' },
+    { id: 'selin',  icon: '🧑‍💼', name: 'İK\'cı Selin',          cost: 1.5e9,   desc: 'Her 3 saniyede en ucuz satış kanalına bedava personel ekler.' },
+    { id: 'deniz',  icon: '⚖️', name: 'Avukat Deniz',           cost: 1.5e10,   desc: 'Olumsuz olayların süresi yarıya iner.' }
   ],
 
   PERKS: [
