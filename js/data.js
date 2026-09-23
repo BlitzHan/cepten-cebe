@@ -6,8 +6,8 @@ G.D = {
   START_COND: 0.5,
   COST_GROWTH: 1.15,
   REFUND: 0.5,
-  IPO_MIN: 2.25e11,         // halka arz için bu turda kazanılması gereken
-  SHARE_UNIT: 7.5e9,       // hisse = floor(sqrt(toplam kazanç / SHARE_UNIT))
+  IPO_MIN: 1e12,            // halka arz için bu turda kazanılması gereken
+  SHARE_UNIT: 3e10,      // hisse = floor(sqrt(toplam kazanç / SHARE_UNIT))
   SHARE_BONUS: 0.02,     // hisse başına otomatik hız bonusu
   ACH_BONUS: 0.01,       // başarım başına otomatik hız bonusu
   OFFLINE_EFF: 0.5,
@@ -15,12 +15,12 @@ G.D = {
 
   // Telefon çağları: alış/satış temel fiyatı. cost = çağ atlama bedeli (nakit)
   ERAS: [
-    { id: 'tuslu',      name: 'Tuşlu Telefon',     buy: 750,    sell: 1000,    cost: 0 },
-    { id: 'kapakli',    name: 'Kapaklı Telefon',   buy: 2000,    sell: 2600,    cost: 2.2e6 },
-    { id: 'dokunmatik', name: 'İlk Dokunmatik',    buy: 5000,   sell: 6500,   cost: 6.8e8 },
-    { id: 'akilli',     name: 'Akıllı Telefon',    buy: 18000,  sell: 23500,  cost: 2e11 },
-    { id: 'amiral',     name: 'Amiral Gemisi',     buy: 65000,  sell: 85000,  cost: 6e13 },
-    { id: 'katlanir',   name: 'Katlanır Telefon',  buy: 110000, sell: 145000, cost: 1.8e16 }
+    { id: 'tuslu',      name: 'Tuşlu Telefon',     short: 'Tuşlu',     buy: 750,    sell: 1000,    cost: 0 },
+    { id: 'kapakli',    name: 'Kapaklı Telefon',   short: 'Kapaklı',   buy: 2000,    sell: 2600,    cost: 6e5 },
+    { id: 'dokunmatik', name: 'İlk Dokunmatik',    short: 'Dokunmatik',    buy: 5000,   sell: 6500,   cost: 5e7 },
+    { id: 'akilli',     name: 'Akıllı Telefon',    short: 'Akıllı',    buy: 18000,  sell: 23500,  cost: 1.2e10 },
+    { id: 'amiral',     name: 'Amiral Gemisi',     short: 'Amiral',     buy: 65000,  sell: 85000,  cost: 3e12 },
+    { id: 'katlanir',   name: 'Katlanır Telefon',  short: 'Katlanır',  buy: 110000, sell: 145000, cost: 5e14 }
   ],
 
   GRADES: [

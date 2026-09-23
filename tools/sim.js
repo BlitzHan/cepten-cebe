@@ -65,6 +65,7 @@ while (simT < HOURS * 3600) {
       if (r.type === 'unit') { S[r.kind === 's' ? 'sup' : 'chan'][r.i] += r.m; S.cash -= r.cost; }
       else if (r.type === 'upg') G.buyUpgrade(r.id);
       else if (r.type === 'depot') G.buyDepot();
+      else if (r.type === 'era') G.buyEra();
     }
     // tıklama yükseltmeleri önerinin dışında kalır; ucuzsa al
     G.upgradesAvailable().forEach(function (u) { if (/^click/.test(u.id) && u.cost < S.cash * 0.2) G.buyUpgrade(u.id); });

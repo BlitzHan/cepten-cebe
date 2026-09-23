@@ -396,6 +396,20 @@
       a = { side: sup <= ch ? 's' : 'c', head: 'Denge iyi, ikisini birlikte büyüt', why: 'Alış ve satış birbirine yakın. Sıradaki en verimli yatırım:', balanced: true };
     }
     a.rec = G.bestFor(a.side, a.balanced ? 0 : Math.abs(sup - ch));
+    // Çağ atlama öneriye girer: parası varsa, 10 dk'dan kısa sürede kendini ödüyorsa
+    // ya da lira başına en iyi birimden çok kazandırıyorsa.
+    var ne = G.nextEra(), pr0 = Math.max(0, G.flow().profit);
+    if (ne && pr0 > 0) {
+      var ratio = (ne.sell - ne.buy) / (G.era().sell - G.era().buy);
+      var eraVal = pr0 * (ratio - 1) / ne.cost;
+      var unitVal = a.rec ? a.rec.gain * Math.max(0, G.sellPrice() - G.buyPrice()) / a.rec.cost : 0;
+      if (S.cash >= ne.cost || ne.cost / (pr0 * (ratio - 1)) <= 600 || eraVal >= unitVal) {
+        a.side = 'era'; a.balanced = false;
+        a.head = ne.name + ' çağına geç';
+        a.why = 'Hâlâ ' + G.era().name.toLocaleLowerCase('tr-TR') + ' satıyorsun. Yeni çağda telefon başı kâr ×' + ratio.toFixed(1).replace('.', ',') + ' olur ve tüm satışların birden değerlenir. Yeni birimden önce bunu al.';
+        a.rec = { type: 'era', name: ne.name, cost: ne.cost, gain: 0, ratio: ratio, m: 1 };
+      }
+    }
     if (a.rec && a.rec.cost > S.cash) {
       var pr = Math.max(0, G.flow().profit);
       a.eta = pr > 0 ? (a.rec.cost - S.cash) / pr : null;
@@ -403,7 +417,7 @@
     var d = G.nextDepot();
     if (depotFull && d && S.cash >= d.cost) a.extra = 'Depo dolu. ' + d.name + ' (' + G.fmt(d.cap) + ' telefon) Parça için sök ve toplu müşteri teklifleri için yer açar; satışı hızlandırmaz.';
     var e = G.nextEra();
-    if (e && S.cash >= e.cost) a.extra = e.name + ' çağına geçebilirsin: telefon başı kâr ×' + ((e.sell - e.buy) / (G.era().sell - G.era().buy)).toFixed(1).replace('.', ',') + '.';
+    if (e && S.cash >= e.cost && a.side !== 'era') a.extra = e.name + ' çağına geçebilirsin: telefon başı kâr ×' + ((e.sell - e.buy) / (G.era().sell - G.era().buy)).toFixed(1).replace('.', ',') + '.';
     return a;
   };
 

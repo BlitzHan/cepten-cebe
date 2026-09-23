@@ -337,8 +337,8 @@
       '<p class="adv-why">' + a.why + '</p>';
     if (r) {
       var ok = r.cost <= S.cash;
-      var ico = r.type === 'unit' ? G.icon(unitList(r.kind)[r.i].id) : r.type === 'depot' ? G.icon('depo') : G.icon('borsa');
-      var gainTxt = r.type === 'depot' ? 'Kapasite ' + f(G.nextDepot().cap) : '+' + fr(r.gain) + ' tel/sn';
+      var ico = r.type === 'era' ? G.ART.phone(S.era + 1) : r.type === 'unit' ? G.icon(unitList(r.kind)[r.i].id) : r.type === 'depot' ? G.icon('depo') : G.icon('borsa');
+      var gainTxt = r.type === 'era' ? 'Telefon başı kâr ×' + r.ratio.toFixed(1).replace('.', ',') : r.type === 'depot' ? 'Kapasite ' + f(G.nextDepot().cap) : '+' + fr(r.gain) + ' tel/sn';
       h += '<button class="adv-rec ' + tone + (ok ? ' ok' : '') + '" data-act="rec">' +
         '<span class="adv-ico">' + ico + '</span>' +
         '<span class="adv-txt"><b>' + r.name + (r.m > 1 ? ' ×' + r.m : '') + '</b><small>' + gainTxt + ' · ' + tl(r.cost) + '</small></span>' +
@@ -431,7 +431,9 @@
     BUFFS.forEach(function (b) { if (G.buff(b[0])) bh += '<span class="buff ' + b[2] + '">' + b[1] + ' ' + Math.ceil(G.buffLeft(b[0])) + ' sn</span>'; });
     setHtml($('buffs'), 'buffs', bh);
 
-    $('eraChip').textContent = G.era().name;
+    var ne = G.nextEra();
+    $('eraChip').innerHTML = G.era().short + (ne ? '<small>→ ' + ne.short + (S.cash >= ne.cost ? ' hazır' : ' %' + Math.floor(S.cash / ne.cost * 100)) + '</small>' : '');
+    $('eraChip').classList.toggle('ready', !!ne && S.cash >= ne.cost);
     renderOffer();
   }
 
@@ -481,6 +483,7 @@
         if (r.type === 'unit') { S[r.kind === 's' ? 'sup' : 'chan'][r.i] += r.m; S.cash -= r.cost; G.emit('unit', { kind: r.kind, i: r.i, m: r.m }); floatText(r.name + ' +' + r.m, r.kind === 's' ? 'buyf' : 'sellf', e.clientX, e.clientY); }
         else if (r.type === 'upg') G.buyUpgrade(r.id);
         else if (r.type === 'depot') G.buyDepot();
+        else if (r.type === 'era') G.buyEra();
       } else {
         tab = recTab(r); lastHtml.panel = null;
       }
@@ -541,7 +544,7 @@
       '<li>İkisini dengede tut. Tezgâhın altındaki <b>öneri</b> kutusu hangisine yatırım yapman gerektiğini söyler.</li>' +
       '<li><b>Yükselt</b> ve <b>Ekip</b> ile hızlan, kondisyonu artır, yeni telefon çağına geç.</li>' +
       '</ol>' +
-      '<p>Bu turda 225 Mr ₺ kazanınca <b>halka arz</b> ile baştan başlar, kalıcı hisse bonusu kazanırsın. Klavyede A al, S sat.</p>',
+      '<p>Bu turda 1 Tn ₺ kazanınca <b>halka arz</b> ile baştan başlar, kalıcı hisse bonusu kazanırsın. Klavyede A al, S sat.</p>',
       [{ label: 'Kepengi aç', primary: true }]);
   }
 
@@ -571,6 +574,7 @@
     document.querySelectorAll('.tabs button').forEach(function (b) {
       b.addEventListener('click', function () { tab = b.dataset.tab; lastHtml.panel = null; renderPanel(); $('panel').parentNode.scrollTop = 0; });
     });
+    $('eraChip').addEventListener('click', function () { tab = 'yukselt'; lastHtml.panel = null; renderPanel(); });
     $('btnSound').addEventListener('click', function () { G.S.sound = !G.S.sound; soundIcon(); lastHtml.panel = null; });
     $('modal').addEventListener('click', function (e) { if (e.target.id === 'modal') closeModal(); });
     $('btnHelp').addEventListener('click', showIntro);

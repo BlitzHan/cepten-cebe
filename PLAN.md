@@ -14,6 +14,8 @@ Hedef adres: `https://blitzhan.github.io/cepten-cebe/`
 >
 > - **Ekonomi gözden geçirmesi (sonradan):** tedarik alış çarpanları kademe ilerledikçe düzenli düşüyor (0,95 → 0,35), satış kanalları 0,90 ile 1,50 arasında. Telefoncuya Toptan 75 Bin yerine 38 Bin ₺ ve 0,90 çarpan (önceden kârsızdı). Usta Teknisyen Fatih artık tıklama kombosu değil kalıcı +%10 kondisyon ve +%15 parça sökme şansı veriyor. Avukat Deniz alışları %5 ucuzlatıyor ve devretme iadesini %75'e çıkarıyor. Kural: elle al/sat hiçbir göstergeyi (kâr/sn, bant, kondisyon, öneri) değiştirmez. Bunların hepsi otomasyonun kalıcı akışından, min(tedarik, satış) üzerinden hesaplanır.
 
+- **Çağlar ucuzladı (sonradan):** oyuncular tuşlu telefonda takılıyordu. Çağ bedelleri 600 Bin, 50 Mn, 12 Mr, 3 Tn, 500 Tn ₺. Öneri kutusu çağ atlamayı kâra etkisi en iyi birimden verimliyse doğrudan öneriyor; üst tabelada sonraki çağa yüzde kaç biriktiği görünüyor. Halka arz eşiği 1 Tn ₺, hisse birimi 30 Mr. Öneriyi izleyen bot: Kapaklı 11 dk, Dokunmatik 33 dk, Akıllı 1 sa, halka arz yaklaşık 1,1–1,2 sa.
+
 Sonuç: bot yaklaşık 20 dk'da Mahalle Dükkânı'na, 1 saatte AVM'ye, yaklaşık 1,5–1,7 saatte halka arza (öneriyi izleyen bot: Mahalle 16 dk, AVM 44 dk) ulaşıyor. Güncel sayılar her zaman `js/data.js` içinde.
 
 ---
